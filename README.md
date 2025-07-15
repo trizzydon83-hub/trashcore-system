@@ -7,7 +7,7 @@
 <a href="#"><img title="𝑻𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆 𝑺𝒚𝒔𝒕𝒆𝒎" src="https://img.shields.io/badge/TrashCore Bots-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
 </p>
 <p align="center">
-<a href="https://github.com/Tennor-modz"><img title="Author" src="https://img.shields.io/badge/Author-Ronzz YT-red.svg?style=for-the-badge&logo=github"></a>
+<a href="https://github.com/Tennor-modz"><img title="Author" src="https://img.shields.io/badge/Author-Trashcore-red.svg?style=for-the-badge&logo=github"></a>
 </p>
 <p align="center">
 <a href="https://github.com/Tennor-modz/followers"><img title="Followers" src="https://img.shields.io/github/followers/Tennor-modz?color=red&style=flat-square"></a>
