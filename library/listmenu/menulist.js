@@ -1,6 +1,6 @@
 const chalk = require('chalk')
 const fs = require('fs')
-const aiMenu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
+const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │▢ Owner:${global.ownername}
 │▢ Version: 1.2.0
 │▢ Type: ${global.typebot}
@@ -19,9 +19,15 @@ const aiMenu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • delaccess    
 │ • >
 │ • $
+╰────────────
+╭─⊷🏓MEDIA-CMD─
+│ • play                     
+╰────────────
+╭─⊷💀BUG-CMD─
+│ • trash                    
 ╰────────────`
 
-module.exports = aiMenu
+module.exports = Menu
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
 	fs.unwatchFile(file)
