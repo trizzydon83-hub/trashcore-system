@@ -21,6 +21,7 @@ global.author = "©𝐏𝐚𝐂𝐊𝐒"
 global.mess = {
     success: '✅ Done.',
     admin: '🚨 Admin only.',
+    premium: '🆘must be a premium user.',
     botAdmin: '🤖 Make me admin first.',
     owner: '👑 Owner only.',
     OnlyGrup: '👥 Group only.',
