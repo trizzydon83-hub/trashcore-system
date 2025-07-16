@@ -267,6 +267,36 @@ const welcomeMessage = `
 image: connectpic, 
 caption: connectMessage
 })
+        //autostatus view
+        trashcore.ev.on('messages.upsert', async chatUpdate => {
+        	if (global.statusview){
+        try {
+            if (!chatUpdate.messages || chatUpdate.messages.length === 0) return;
+            const mek = chatUpdate.messages[0];
+
+            if (!mek.message) return;
+            mek.message =
+                Object.keys(mek.message)[0] === 'ephemeralMessage'
+                    ? mek.message.ephemeralMessage.message
+                    : mek.message;
+
+            if (mek.key && mek.key.remoteJid === 'status@broadcast') {
+                let emoji = [ "❤️", "😍", "💙" ];
+                let sigma = emoji[Math.floor(Math.random() * emoji.length)];
+                await trashcore.readMessages([mek.key]);
+                trashcore.sendMessage(
+                    'status@broadcast',
+                    { react: { text: sigma, key: mek.key } },
+                    { statusJidList: [mek.key.participant] },
+                );
+            }
+
+        } catch (err) {
+            console.error(err);
+        }
+      }
+   }
+ )
       trashcore.ev.on('contacts.update', update => {
         for (let contact of update) {
             let id = trashcore.decodeJid(contact.id);

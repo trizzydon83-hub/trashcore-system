@@ -10,6 +10,7 @@ global.botversion = "1.2.0"
 global.typebot = "Plugin"
 global.session = "trashsession"
 global.connect = true
+global.statusview = true
 global.thumb = "https://files.catbox.moe/4ryp6k.jpg"
 global.wagc = "https://chat.whatsapp.com/BPyIptm3ZH68y4pSPrLMyq?mode=r_t"
 //━━━━━━━━━━━━━━━━━━━━━━━━//
