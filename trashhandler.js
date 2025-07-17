@@ -261,7 +261,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true
 const plugins = await pluginsLoader(path.resolve(__dirname, "trashplugs"))
-const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,sleep,fkontak,menu,addPremiumUser, delPremiumUser,isPremium,trashpic,trashdebug,sleep}
+const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,sleep,fkontak,menu,addPremiumUser, delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins}
 for (let plugin of plugins) {
 if (plugin.command.find(e => e == command.toLowerCase())) {
 pluginsDisable = false
@@ -272,10 +272,7 @@ await plugin(m, trashdex)
 if (!pluginsDisable) return
 /////////switch to commands case//////////////
 switch(command) {
-
-
-
-
+ //////yeah apply your case. commands here if possible//////
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 default:
 if (budy.startsWith('=>')) {
