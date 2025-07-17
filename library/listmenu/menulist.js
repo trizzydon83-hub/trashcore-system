@@ -2,7 +2,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │▢ Owner:${global.ownername}
-│▢ Version: 1.2.0
+│▢ Version: 1.2.5
 │▢ Type: ${global.typebot}
 ╰────────────
 ╭─⊷🐦‍🔥MAIN-CMD─
@@ -17,6 +17,7 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • getplugin 
 │ • addaccess
 │ • delaccess    
+│ • autoreact    
 │ • >
 │ • $
 ╰────────────
@@ -25,6 +26,10 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 ╰────────────
 ╭─⊷💀BUG-CMD─
 │ • trash                    
+╰────────────
+╭─⊷🤖AI-CMD─
+│ • gemma 
+│ • indo-ai        
 ╰────────────`
 
 module.exports = Menu
