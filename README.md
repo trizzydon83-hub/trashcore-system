@@ -28,6 +28,11 @@
  Click [`Go to external plugin`](https://github.com/Tennor-modz/External-plugins/tree/main)
 
 
+
+`Deployment Set Up`
+1.[`FORK`](https://github.com/Tennor-modz/trashcore-system/fork)***
+
+
 ## Contents:
 - [Information](#information)
 - [Language Support](#support-language)
