@@ -36,7 +36,12 @@
 
 
 
-2.[`Scan Session`](https://trashcore-pairing-zaht.onrender.com/pair)
+2.[`Scan Session first server`](https://trashcore-pairing-zaht.onrender.com/pair)
+
+
+2.[`Scan Session second server`](https://trashcore-pairing-1.onrender.com))
+
+
 
 
 3.`Deploy`/`Installation`
