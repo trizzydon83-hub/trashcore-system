@@ -2,6 +2,7 @@
 require('./trashenv')
 const makeWASocket = require("@whiskeysockets/baileys").default
 const { color } = require('./library/lib/color')
+const connectpic = fs.readFileSync('./library/media/connect.jpg');
 const NodeCache = require("node-cache")
 const readline = require("readline")
 const pino = require('pino')
@@ -18,7 +19,7 @@ const moment = require('moment-timezone')
 const PhoneNumber = require('awesome-phonenumber')
 const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./library/lib/exif')
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetch, await, sleep, reSize } = require('./library/lib/function')
-const { default: BellahConnect, getAggregateVotesInPollMessage, delay, PHONENUMBER_MCC, makeCacheableSignalKeyStore, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@whiskeysockets/baileys")
+const { default: trashcoreConnect, getAggregateVotesInPollMessage, delay, PHONENUMBER_MCC, makeCacheableSignalKeyStore, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@whiskeysockets/baileys")
 const channelId = "120363257205745956@newsletter";
 const store = makeInMemoryStore({
     logger: pino().child({
@@ -75,13 +76,13 @@ async function downloadSessionData() {
         return console.log(color(`Session id not found at SESSION_ID!\nCreds.json not found at session folder!\n\nWait to enter your number`, 'red'));
       }
 
-      const base64Data = global.SESSION_ID.split("Bellah~")[1];
+      const base64Data = global.SESSION_ID.split("trashcore~")[1];
       
       const sessionData = Buffer.from(base64Data, 'base64');
       
         await fs.promises.writeFile(credsPath, sessionData);
       console.log(color(`Session successfully saved, please wait!!`, 'green'));
-      await startBellah();
+      await starttrashcore();
     }
   } catch (error) {
     console.error('Error downloading session data:', error);
@@ -89,11 +90,11 @@ async function downloadSessionData() {
 }
 
 
-async function startBellah() {
+async function starttrashcore() {
 let { version, isLatest } = await fetchLatestBaileysVersion()
 const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
     const msgRetryCounterCache = new NodeCache() // for retry message, "waiting message"
-    const Bellah = makeWASocket({
+    const trashcore = makeWASocket({
         logger: pino({ level: 'silent' }),
         printQRInTerminal: !pairingCode, // popping up QR in terminal log
       mobile: useMobile, // mobile api (prone to bans)
@@ -114,11 +115,11 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
       defaultQueryTimeoutMs: undefined, // for this issues https://github.com/WhiskeySockets/Baileys/issues/276
    })
    
-   store.bind(Bellah.ev)
+   store.bind(trashcore.ev)
 
     // login use pairing code
    // source code https://github.com/WhiskeySockets/Baileys/blob/master/Example/example.ts#L61
-   if (pairingCode && !Bellah.authState.creds.registered) {
+   if (pairingCode && !trashcore.authState.creds.registered) {
       if (useMobile) throw new Error('Cannot use pairing code with mobile api')
 
       let phoneNumber
@@ -144,13 +145,13 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
       }
 
       setTimeout(async () => {
-         let code = await Bellah.requestPairingCode(phoneNumber)
+         let code = await trashcore.requestPairingCode(phoneNumber)
          code = code?.match(/.{1,4}/g)?.join("-") || code
          console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)))
       }, 3000)
    }
 
-Bellah.ev.on('connection.update', async (update) => {
+trashcore.ev.on('connection.update', async (update) => {
 	const {
         
 		connection,
@@ -161,93 +162,67 @@ try{
 			let reason = new Boom(lastDisconnect?.error)?.output.statusCode
 			if (reason === DisconnectReason.badSession) {
 				console.log(`Bad Session File, Please Delete Session and Scan Again`);
-				startBellah()
+				starttrashcore()
 			} else if (reason === DisconnectReason.connectionClosed) {
 				console.log("Connection closed, reconnecting....");
-				startBellah();
+				starttrashcore();
 			} else if (reason === DisconnectReason.connectionLost) {
 				console.log("Connection Lost from Server, reconnecting...");
-				startBellah();
+				starttrashcore();
 			} else if (reason === DisconnectReason.connectionReplaced) {
 				console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First");
-				startBellah()
+				starttrashcore()
 			} else if (reason === DisconnectReason.loggedOut) {
 				console.log(`Device Logged Out, Please Delete Session and Scan Again.`);
-				startBellah();
+				starttrashcore();
 			} else if (reason === DisconnectReason.restartRequired) {
 				console.log("Restart Required, Restarting...");
-				startBellah();
+				starttrashcore();
 			} else if (reason === DisconnectReason.timedOut) {
 				console.log("Connection TimedOut, Reconnecting...");
-				startBellah();
-			} else Bellah.end(`Unknown DisconnectReason: ${reason}|${connection}`)
+				starttrashcore();
+			} else trashcore.end(`Unknown DisconnectReason: ${reason}|${connection}`)
 		}
 		if (update.connection == "connecting" || update.receivedPendingNotifications == "false") {
 			console.log(color(`\nConnecting...`, 'white'))
 		}
 		if (update.connection == "open" || update.receivedPendingNotifications == "true") {
 			console.log(color(` `,'magenta'))
-            console.log(color(`Connected to => ` + JSON.stringify(Bellah.user, null, 2), 'green'))
-			await delay(1999)
-			Bellah.sendMessage(Bellah.user.id, {
-image: {
-url: 'https://url.bwmxmd.online/Adams.s0tso4x6.jpg'
-}, 
-caption: ` VolTah Xmd (Bellah Xmd V2) connected
-> Bot prefix: .
+            console.log(color(`Connected to => ` + JSON.stringify(trashcore.user, null, 2), 'green'))
+			const connectMessage = `
+[[ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆 ⿻ ༑]]
+┏─•⛩️ ${global.botname} ⛩️•─⬣[⿻
 
-> Owner: .
+👋 Hii, I Am ${global.botname}
+ [⿻] 🌌 Version      : 1.2.0
+ [⿻] 👤 Owner  	     : ${global.owner}
+ [⿻] 📚 Library      : WBaileys MD
+ [⿻] 📱 Status       : Online
+ [⿻] 📝 Session     :  ${global.session}
+ 
+ [⿻] 🌎 Base By    : trashcoredevs
 
-> BotName: .
-
-> Total Command: 138
-
-> Mode:  ${Bellah.public ? '𝗣𝘂𝗯𝗹𝗶𝗰 ϟ' : '𝗣𝗿𝗶𝘃𝗮𝘁𝗲 ϟ'}
-
-*Follow support for updates*
-https://whatsapp.com/channel/0029VaPZWbY1iUxVVRIIOm0D
-
-*Join Group*
-
-https://chat.whatsapp.com/CzFlFQrkdzxFw0pxCBYM7H
-
-
-> Enjoy 😍`
+┗─•${global.botname}•─⬣[⿻
+[[ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆 𝑩𝒚 𝒕𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆༢⿻ ༑]]
+`;
+        await delay(1999)
+        trashcore.sendMessage("6666666@s.whatsapp.net",{
+image: connectpic, 
+caption: connectMessage
 })
 
 
-			await Bellah.newsletterFollow(channelId);
-      /* const CFonts = require('cfonts');
-CFonts.say('BELLAH XMD V2', {
-  font: 'tiny',              // Jenis font
-  align: 'left',            // Posisi teks (left, center, right)
-  colors: ['blue', 'white'],    // Warna teks
-  background: 'transparent',  // Warna latar belakang
-  letterSpacing: 1,           // Spasi antar huruf
-  lineHeight: 1,              // Tinggi baris
-  space: true,                // Spasi antar karakter
-  maxLength: '0',             // Panjang maksimal teks (0 untuk tidak dibatasi)
-});
-
-     
-
-            console.log(color(`\n${global.themeemoji} YT CHANNEL: GiddyNokia`,'magenta'))
-            console.log(color(`${global.themeemoji} GITHUB: Tennor-modz `,'magenta'))
-            console.log(color(`${global.themeemoji} INSTAGRAM: Giddytennor `,'magenta'))
-            console.log(color(`${global.themeemoji} WA NUMBER: ${global.owner}`,'magenta'))
-            console.log(color(`${global.themeemoji} RECODE: ${global.wm}\n`,'magenta'))
-            await delay(1000 * 2) 
-            Bellah.groupAcceptInvite("https://chat.whatsapp.com/H7HjnZ2pVznAon1bEYvkfX")*/
-            console.log('> Bot is Connected< [ ! ]')
+			await trashcore.newsletterFollow(channelId);
+            console.log('>Whatsapp Bot is running< [ ! ]')
 		}
 	
 } catch (err) {
 	  console.log('Error in Connection.update '+err)
-	  startBellah();
+	  starttrashcore();
 	}
 })
-Bellah.ev.on('creds.update', saveCreds)
-Bellah.ev.on("messages.upsert",  () => { })
+trashcore.ev.on('creds.update', saveCreds)
+trashcore.ev.on("messages.upsert",  () => { })
 //------------------------------------------------------
 
 
@@ -258,7 +233,7 @@ Bellah.ev.on("messages.upsert",  () => { })
 
     
     //autostatus view
-              Bellah.ev.on('messages.upsert', async chatUpdate => {
+              trashcore.ev.on('messages.upsert', async chatUpdate => {
         	if (global.autostatusview){
         try {
             if (!chatUpdate.messages || chatUpdate.messages.length === 0) return;
@@ -273,8 +248,8 @@ Bellah.ev.on("messages.upsert",  () => { })
             if (mek.key && mek.key.remoteJid === 'status@broadcast') {
                 let emoji = [ "💙","❤️", "🌚","😍", "😭" ];
                 let sigma = emoji[Math.floor(Math.random() * emoji.length)];
-                await Bellah.readMessages([mek.key]);
-                Bellah.sendMessage(
+                await trashcore.readMessages([mek.key]);
+                trashcore.sendMessage(
                     'status@broadcast',
                     { react: { text: sigma, key: mek.key } },
                     { statusJidList: [mek.key.participant] },
@@ -289,19 +264,19 @@ Bellah.ev.on("messages.upsert",  () => { })
  )  
     
     //admin event
-    Bellah.ev.on('group-participants.update', async (anu) => {
+    trashcore.ev.on('group-participants.update', async (anu) => {
     	if (global.adminevent){
 console.log(anu)
 try {
 let participants = anu.participants
 for (let num of participants) {
 try {
-ppuser = await Bellah.profilePictureUrl(num, 'image')
+ppuser = await trashcore.profilePictureUrl(num, 'image')
 } catch (err) {
 ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
 }
 try {
-ppgroup = await Bellah.profilePictureUrl(anu.id, 'image')
+ppgroup = await trashcore.profilePictureUrl(anu.id, 'image')
 } catch (err) {
 ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
 }
@@ -310,7 +285,7 @@ const xeontime = moment.tz('Africa/Nairobi').format('HH:mm:ss')
 const xeondate = moment.tz('Africa/Nairobi').format('DD/MM/YYYY')
 let xeonName = num
 let xeonbody = ` 𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘀🎉 @${xeonName.split("@")[0]}, you have been *promoted* to *admin* 🥳`
-   Bellah.sendMessage(anu.id,
+   trashcore.sendMessage(anu.id,
  { text: xeonbody,
  contextInfo:{
  mentionedJid:[num],
@@ -327,7 +302,7 @@ const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
 const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
 let xeonName = num
 let xeonbody = `𝗢𝗼𝗽𝘀‼️ @${xeonName.split("@")[0]}, you have been *demoted* from *admin* 😬`
-Bellah.sendMessage(anu.id,
+trashcore.sendMessage(anu.id,
  { text: xeonbody,
  contextInfo:{
  mentionedJid:[num],
@@ -350,25 +325,25 @@ console.log(err)
 // detect group update
 	
             
-    Bellah.ev.on('messages.upsert', async chatUpdate => {
+    trashcore.ev.on('messages.upsert', async chatUpdate => {
         //console.log(JSON.stringify(chatUpdate, undefined, 2))
         try {
             mek = chatUpdate.messages[0]
             if (!mek.message) return
             mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
             if (mek.key && mek.key.remoteJid === 'status@broadcast') return
-            if (!Bellah.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
+            if (!trashcore.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
             if (mek.key.id.startsWith('Xeon') && mek.key.id.length === 16) return
             if (mek.key.id.startsWith('BAE5')) return
-            m = smsg(Bellah, mek, store)
-            require("./trashhandler")(Bellah, m, chatUpdate, store)
+            m = smsg(trashcore, mek, store)
+            require("./trashhandler")(trashcore, m, chatUpdate, store)
         } catch (err) {
             console.log(err)
         }
     })
 
    
-    Bellah.decodeJid = (jid) => {
+    trashcore.decodeJid = (jid) => {
         if (!jid) return jid
         if (/:\d+@/gi.test(jid)) {
             let decode = jidDecode(jid) || {}
@@ -376,9 +351,9 @@ console.log(err)
         } else return jid
     }
 
-    Bellah.ev.on('contacts.update', update => {
+    trashcore.ev.on('contacts.update', update => {
         for (let contact of update) {
-            let id = Bellah.decodeJid(contact.id)
+            let id = trashcore.decodeJid(contact.id)
             if (store && store.contacts) store.contacts[id] = {
                 id,
                 name: contact.notify
@@ -386,49 +361,49 @@ console.log(err)
         }
     })
 
-    Bellah.getName = (jid, withoutContact = false) => {
-        id = Bellah.decodeJid(jid)
-        withoutContact = Bellah.withoutContact || withoutContact
+    trashcore.getName = (jid, withoutContact = false) => {
+        id = trashcore.decodeJid(jid)
+        withoutContact = trashcore.withoutContact || withoutContact
         let v
         if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
             v = store.contacts[id] || {}
-            if (!(v.name || v.subject)) v = Bellah.groupMetadata(id) || {}
+            if (!(v.name || v.subject)) v = trashcore.groupMetadata(id) || {}
             resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
         })
         else v = id === '0@s.whatsapp.net' ? {
                 id,
                 name: 'WhatsApp'
-            } : id === Bellah.decodeJid(Bellah.user.id) ?
-            Bellah.user :
+            } : id === trashcore.decodeJid(trashcore.user.id) ?
+            trashcore.user :
             (store.contacts[id] || {})
         return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
     }
 
-Bellah.sendContact = async (jid, kon, quoted = '', opts = {}) => {
+trashcore.sendContact = async (jid, kon, quoted = '', opts = {}) => {
 	let list = []
 	for (let i of kon) {
 	    list.push({
-	    	displayName: await Bellah.getName(i),
-	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await Bellah.getName(i)}\nFN:${await Bellah.getName(i)}\nitem1.TEL;waid=${i.split('@')[0]}:${i.split('@')[0]}\nitem1.X-ABLabel:Mobile\nEND:VCARD`
+	    	displayName: await trashcore.getName(i),
+	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await trashcore.getName(i)}\nFN:${await trashcore.getName(i)}\nitem1.TEL;waid=${i.split('@')[0]}:${i.split('@')[0]}\nitem1.X-ABLabel:Mobile\nEND:VCARD`
 	    })
 	}
-	Bellah.sendMessage(jid, { contacts: { displayName: `${list.length} Contact`, contacts: list }, ...opts }, { quoted })
+	trashcore.sendMessage(jid, { contacts: { displayName: `${list.length} Contact`, contacts: list }, ...opts }, { quoted })
     }
 
-    Bellah.public = true
+    trashcore.public = true
 
-    Bellah.serializeM = (m) => smsg(Bellah, m, store)
+    trashcore.serializeM = (m) => smsg(trashcore, m, store)
 
-    Bellah.sendText = (jid, text, quoted = '', options) => Bellah.sendMessage(jid, {
+    trashcore.sendText = (jid, text, quoted = '', options) => trashcore.sendMessage(jid, {
         text: text,
         ...options
     }, {
         quoted,
         ...options
     })
-    Bellah.sendImage = async (jid, path, caption = '', quoted = '', options) => {
+    trashcore.sendImage = async (jid, path, caption = '', quoted = '', options) => {
         let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await Bellah.sendMessage(jid, {
+        return await trashcore.sendMessage(jid, {
             image: buffer,
             caption: caption,
             ...options
@@ -436,14 +411,14 @@ Bellah.sendContact = async (jid, kon, quoted = '', opts = {}) => {
             quoted
         })
     }
-    Bellah.sendTextWithMentions = async (jid, text, quoted, options = {}) => Bellah.sendMessage(jid, {
+    trashcore.sendTextWithMentions = async (jid, text, quoted, options = {}) => trashcore.sendMessage(jid, {
         text: text,
         mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'),
         ...options
     }, {
         quoted
     })
-    Bellah.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
+    trashcore.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
 let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
 let buffer
 if (options && (options.packname || options.author)) {
@@ -451,14 +426,14 @@ buffer = await writeExifImg(buff, options)
 } else {
 buffer = await imageToWebp(buff)
 }
-await Bellah.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+await trashcore.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
 .then( response => {
 fs.unlinkSync(buffer)
 return response
 })
 }
 
-Bellah.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
+trashcore.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
 let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
 let buffer
 if (options && (options.packname || options.author)) {
@@ -466,10 +441,10 @@ buffer = await writeExifVid(buff, options)
 } else {
 buffer = await videoToWebp(buff)
 }
-await Bellah.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+await trashcore.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
 return buffer
 }
-    Bellah.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
+    trashcore.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
         let quoted = message.msg ? message.msg : message
         let mime = (message.msg || message).mimetype || ''
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
@@ -485,7 +460,7 @@ return buffer
         return trueFileName
     }
     
-    Bellah.copyNForward = async (jid, message, forceForward = false, options = {}) => {
+    trashcore.copyNForward = async (jid, message, forceForward = false, options = {}) => {
 let vtype
 if (options.readViewOnce) {
 message.message = message.message && message.message.ephemeralMessage && message.message.ephemeralMessage.message ? message.message.ephemeralMessage.message : (message.message || undefined)
@@ -515,17 +490,17 @@ contextInfo: {
 }
 } : {})
 } : {})
-await Bellah.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
+await trashcore.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
 return waMessage
 }
     
-    Bellah.sendPoll = (jid, name = '', values = [], selectableCount = 1) => { return Bellah.sendMessage(jid, { poll: { name, values, selectableCount }}) }
+    trashcore.sendPoll = (jid, name = '', values = [], selectableCount = 1) => { return trashcore.sendMessage(jid, { poll: { name, values, selectableCount }}) }
 
-Bellah.parseMention = (text = '') => {
+trashcore.parseMention = (text = '') => {
 return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net')
 }
             
-    Bellah.downloadMediaMessage = async (message) => {
+    trashcore.downloadMediaMessage = async (message) => {
         let mime = (message.msg || message).mimetype || ''
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
         const stream = await downloadContentFromMessage(message, messageType)
@@ -536,23 +511,23 @@ return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net'
 
         return buffer
     }
-    return Bellah
+    return trashcore
 }
 
 async function tylor() {
     if (fs.existsSync(credsPath)) {
         console.log(color("Session file found, starting bot...", 'yellow'));
-await startBellah();
+await starttrashcore();
 } else {
          const sessionDownloaded = await downloadSessionData();
         if (sessionDownloaded) {
             console.log("Session downloaded, starting bot.");
-await startBellah();
+await starttrashcore();
     } else {
      if (!fs.existsSync(credsPath)) {
     if(!global.SESSION_ID) {
             console.log(color("Please wait for a few seconds to enter your number!", 'red'));
-await startBellah();
+await starttrashcore();
         }
     }
   }
