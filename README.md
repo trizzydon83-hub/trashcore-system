@@ -23,6 +23,11 @@
 
 ---
 
+
+## External plugins 💢
+ Click [`Go to external plugin`](https://github.com/Tennor-modz/External-plugins/tree/main)
+
+
 ## Contents:
 - [Information](#information)
 - [Language Support](#support-language)
