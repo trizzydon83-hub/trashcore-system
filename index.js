@@ -2,7 +2,6 @@
 require('./trashenv')
 const makeWASocket = require("@whiskeysockets/baileys").default
 const { color } = require('./library/lib/color')
-const connectpic = fs.readFileSync('./library/media/connect.jpg');
 const NodeCache = require("node-cache")
 const readline = require("readline")
 const pino = require('pino')
@@ -21,6 +20,7 @@ const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./libr
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetch, await, sleep, reSize } = require('./library/lib/function')
 const { default: trashcoreConnect, getAggregateVotesInPollMessage, delay, PHONENUMBER_MCC, makeCacheableSignalKeyStore, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@whiskeysockets/baileys")
 const channelId = "120363257205745956@newsletter";
+const connectpic = fs.readFileSync('./library/media/connect.jpg');
 const store = makeInMemoryStore({
     logger: pino().child({
         level: 'silent',
