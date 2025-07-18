@@ -39,7 +39,9 @@
 2.[`Scan Session first server`](https://trashcore-pairing-zaht.onrender.com/pair)
 
 
-2.[`Scan Session second server`](https://trashcore-pairing-1.onrender.com))
+         *OR*
+
+[`Scan Session second server`](https://trashcore-pairing-1.onrender.com)
 
 
 
