@@ -39,6 +39,17 @@
 2.[`Scan Session`](https://trashcore-pairing-zaht.onrender.com/pair)
 
 
+3.`Deploy`/`Installation`
+* [Heroku](  https://heroku.com/deploy?template=https://github.com/Tennor-modz/trashcore-system)
+
+
+* [Bot hosting panel](https://bot-hosting.net/)
+
+
+* * [Render](https://render.com/)
+
+
+
 ## Contents:
 - [Information](#information)
 - [Language Support](#support-language)
