@@ -30,7 +30,13 @@
 
 
 `Deployment Set Up`
-1.[`FORK`](https://github.com/Tennor-modz/trashcore-system/fork)***
+
+
+1.[`FORK repo`](https://github.com/Tennor-modz/trashcore-system/fork)
+
+
+
+2.[`Scan Session`](https://trashcore-pairing-zaht.onrender.com/pair)
 
 
 ## Contents:
