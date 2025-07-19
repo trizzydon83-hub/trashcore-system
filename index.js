@@ -20,7 +20,6 @@ const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./libr
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetch, await, sleep, reSize } = require('./library/lib/function')
 const { default: trashcoreConnect, getAggregateVotesInPollMessage, delay, PHONENUMBER_MCC, makeCacheableSignalKeyStore, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@whiskeysockets/baileys")
 const channelId = "120363257205745956@newsletter";
-const connectpic = fs.readFileSync('./library/media/connect.jpg');
 const store = makeInMemoryStore({
     logger: pino().child({
         level: 'silent',
@@ -189,8 +188,12 @@ try{
 		if (update.connection == "open" || update.receivedPendingNotifications == "true") {
 			console.log(color(` `,'magenta'))
             console.log(color(`Connected to => ` + JSON.stringify(trashcore.user, null, 2), 'green'))
-			const connectMessage = `
-[[ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆 ⿻ ༑]]
+			await delay(1999)
+			trashcore.sendMessage(trashcore.user.id, {
+image: {
+url: 'https://url.bwmxmd.online/Adams.jin9796u.jpg'
+}, 
+caption: ` [ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆 ⿻ ༑]]
 ┏─•⛩️ ${global.botname} ⛩️•─⬣[⿻
 
 👋 Hii, I Am ${global.botname}
@@ -203,17 +206,13 @@ try{
  [⿻] 🌎 Base By    : trashcoredevs
 
 ┗─•${global.botname}•─⬣[⿻
-[[ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆 𝑩𝒚 𝒕𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆༢⿻ ༑]]
-`;
-        await delay(1999)
-        trashcore.sendMessage("6666666@s.whatsapp.net",{
-image: connectpic, 
-caption: connectMessage
+[[ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆 𝑩𝒚 𝒕𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆༢⿻ ༑]]`
 })
 
 
 			await trashcore.newsletterFollow(channelId);
-            console.log('>Whatsapp Bot is running< [ ! ]')
+
+            console.log('>Trashcore Bot is Connected< [ ! ]')
 		}
 	
 } catch (err) {
@@ -234,7 +233,7 @@ trashcore.ev.on("messages.upsert",  () => { })
     
     //autostatus view
               trashcore.ev.on('messages.upsert', async chatUpdate => {
-        	if (global.autostatusview){
+        	if (global.statusview){
         try {
             if (!chatUpdate.messages || chatUpdate.messages.length === 0) return;
             const mek = chatUpdate.messages[0];
@@ -263,67 +262,7 @@ trashcore.ev.on("messages.upsert",  () => { })
    }
  )  
     
-    //admin event
-    trashcore.ev.on('group-participants.update', async (anu) => {
-    	if (global.adminevent){
-console.log(anu)
-try {
-let participants = anu.participants
-for (let num of participants) {
-try {
-ppuser = await trashcore.profilePictureUrl(num, 'image')
-} catch (err) {
-ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
-}
-try {
-ppgroup = await trashcore.profilePictureUrl(anu.id, 'image')
-} catch (err) {
-ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
-}
- if (anu.action == 'promote') {
-const xeontime = moment.tz('Africa/Nairobi').format('HH:mm:ss')
-const xeondate = moment.tz('Africa/Nairobi').format('DD/MM/YYYY')
-let xeonName = num
-let xeonbody = ` 𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘀🎉 @${xeonName.split("@")[0]}, you have been *promoted* to *admin* 🥳`
-   trashcore.sendMessage(anu.id,
- { text: xeonbody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": ` ${global.botname}`,
-"body": `${ownername}`,
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": ``,
-"sourceUrl": `${wagc}`}}})
-} else if (anu.action == 'demote') {
-const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-let xeonName = num
-let xeonbody = `𝗢𝗼𝗽𝘀‼️ @${xeonName.split("@")[0]}, you have been *demoted* from *admin* 😬`
-trashcore.sendMessage(anu.id,
- { text: xeonbody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": ` ${global.botname}`,
-"body": `${ownername}`,
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": ``,
-"sourceUrl": `${wagc}`}}})
-}
-}
-} catch (err) {
-console.log(err)
-}
-}
-})
 
-// detect group update
-	
             
     trashcore.ev.on('messages.upsert', async chatUpdate => {
         //console.log(JSON.stringify(chatUpdate, undefined, 2))
