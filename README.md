@@ -53,7 +53,6 @@
 * [Bot hosting panel](https://bot-hosting.net/)
 
 
-* * [Render](https://render.com/)
 
 
 
