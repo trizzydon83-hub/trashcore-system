@@ -5,8 +5,7 @@ Presence, WA_MESSAGE_STUB_TYPES, Mimetype, relayWAMessage, Browsers, DisconnectR
 const os = require('os')
 const fs = require('fs')
 const fg = require('api-dylux')
-const fetch = require('node-fetch');
-const util = require('utils')
+const fetch = require('node-fetch')
 const axios = require('axios')
 const { exec, execSync } = require("child_process")
 const chalk = require('chalk')
