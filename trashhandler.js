@@ -361,7 +361,19 @@ await plugin(m, trashdex)
 }
 if (!pluginsDisable) return
 switch (command) {
-
+case 'script':
+case 'repo': {
+  const botInfo = `
+╭─ ⌬ Bot Info
+│ • Name    : ${botname}
+│ • Owner   : ${ownername}
+│ • Version  : ${botversion}
+│ • Repo : gitHub.com/Tennor-modz/trashcore-system/fork 
+│ • Runtime  : ${runtime(process.uptime())}\n╰─────────────
+`
+  reply(botInfo)
+}
+break
 //==================================================//      
 case 'autotyping':
 if (!trashown) return reply(mess.owner)
