@@ -8,7 +8,7 @@ global.SESSION_ID = process.env.SESSION_ID || 'trashcore~eyJub2lzZUtleSI6eyJwcml
 global.prefix = process.env.BOT_PREFIX ||'.'
 global.owner = ["254104245659",]
 global.error = ["6666",]
-global.ownername = "Trashcore"
+global.ownername = process.env.OWNER_NAME ||'Trashcore'
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Bot Setting
 global.botname = "Trashcore"
