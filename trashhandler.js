@@ -429,7 +429,7 @@ case "invite": case "linkgc": {
           break;
 //==================================================//
 case "close": {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!isBotAdmins) return reply("bot must be admin first")
 if (!trashown) return reply(mess.owner)
 await trashcore.groupSettingUpdate(m.chat, 'announcement')
@@ -438,7 +438,7 @@ reply("Success closed group chat,all members are not allowed to chat for now")
 break
 //==================================================//
 case "open": {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!isBotAdmins) return reply("bot must be admin first")
 if (!trashown) return reply(mess.owner)
 await trashcore.groupSettingUpdate(m.chat, 'not_announcement')
@@ -447,7 +447,7 @@ reply("Success opened group chat,all members can send messages in group now")
 break
 //==================================================//
 case 'tagall': {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!trashown) return reply(mess.owner)
 if (!text) return reply("fuck you")
 trashcore.sendMessage(m.chat, {
@@ -469,7 +469,7 @@ break
 //==================================================//
 case 'h':
 case 'hidetag': {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!trashown) return reply(mess.owner)
 if (m.quoted) {
 trashcore.sendMessage(m.chat, {
@@ -489,7 +489,7 @@ quoted: m
 break
 //==================================================//
 case 'kick': {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!isBotAdmins) return reply("bot must be admin first")
 if (!trashown) return reply(mess.owner)
 let users = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
@@ -529,7 +529,7 @@ trashcore.groupLeave(m.chat);
           break;
 //==================================================//
 case "promote": case "promot": {
-if (!isGroup) return reply(`for group only`)
+if (!m.isGroup) return reply(`for group only`)
 if (!isAdmins && !trashown) return m.reply(`Command reserved for group admins only`)
 if (!isBotAdmins) return reply(`bot is not an admin idiot`)
 if (m.quoted || text) {
@@ -539,7 +539,7 @@ await trashcore.groupParticipantsUpdate(m.chat, [target], 'promote').then((res) 
 break
 //==================================================//
 case "demote": case "dismiss": {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!isAdmins && !trashown) return m.reply(mess.admin)
 if (!isBotAdmins) return reply(`bot is not an admin in this group`)
 if (m.quoted || text) {
@@ -549,7 +549,7 @@ await trashcore.groupParticipantsUpdate(m.chat, [target], 'demote').then((res) =
 break
 //==================================================//
 case "close": {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!isBotAdmins) return reply("bot must be admin first")
 if (!trashown) return reply(mess.owner)
 await trashcore.groupSettingUpdate(m.chat, 'announcement')
@@ -558,7 +558,7 @@ reply("Success closed group chat,all members are not allowed to chat for now")
 break
 //==================================================//
 case "open": {
-if (!isGroup) return reply(mess.group)
+if (!m.isGroup) return reply(mess.group)
 if (!isBotAdmins) return reply("bot must be admin first")
 if (!trashown) return reply(mess.owner)
 await trashcore.groupSettingUpdate(m.chat, 'not_announcement')
