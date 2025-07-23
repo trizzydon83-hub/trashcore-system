@@ -412,7 +412,7 @@ case "xowner": {
     }
   }), {
     userJid: m.chat,
-    quoted: loli
+    quoted: fkontak
   })
   trashcore.relayMessage(m.chat, contact.message, {
     messageId: contact.key.id
@@ -693,7 +693,7 @@ break
                     audio: { url: crot },
                     mimetype: "audio/mpeg", 
                     ptt: true
-                }, { quoted: loli })
+                }, { quoted: fkontak })
             }
             break
 //==================================================//
@@ -845,7 +845,7 @@ text: "𝗕𝗮𝘀𝗲-𝗕𝗼𝘁𝘀-𝗩2" }, //input watermark footer
         "buttonParamsJson": `{"display_text": "copy ID","copy_code": "${res.id}"}`
            },
      ], },},
-    }, }, },{ quoted : loli });
+    }, }, },{ quoted : fkontak });
 await trashcore.relayMessage( msg.key.remoteJid,msg.message,{ messageId: msg.key.id }
 );
 }
@@ -918,7 +918,7 @@ fileName: `${fileName}`,
 caption: `•Successful Encrypt
 •Type: Hard Code
 •@Tennormodz`,
-}, { quoted: loli });
+}, { quoted: fkontak });
 
 } catch (err) {
 console.error('Error during encryption:', err);
