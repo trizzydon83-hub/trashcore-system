@@ -68,7 +68,7 @@ const setting = db.data.settings[botNumber]
         if (typeof setting !== 'object') db.data.settings[botNumber] = {}
 	    if (setting) {
 //    	    if (!('anticall' in setting)) setting.anticall = false
-    		if (!isNumber(setting.status)) setting.status = 0
+    		if (!botNumber(setting.status)) setting.status = 0
     		if (!('autobio' in setting)) setting.autobio = false
             if (!('autoread' in setting)) setting.autoread = false
             if (!('autoTyping' in setting)) setting.autoTyping = false
