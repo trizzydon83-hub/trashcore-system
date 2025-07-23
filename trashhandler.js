@@ -249,7 +249,7 @@ if (m.isGroup) {
 ///////////////Similarity///////////////////////
 function getCaseNames() {
   try {
-    const data = fs.readFileSync('./WhatsApp.js', 'utf8');
+    const data = fs.readFileSync('./trashhandler.js', 'utf8');
     const casePattern = /case\s+'([^']+)'/g;
     const matches = data.match(casePattern);
 
@@ -266,7 +266,7 @@ function getCaseNames() {
 
 /////////////fetch commands///////////////
 let totalfeature= () =>{
-var mytext = fs.readFileSync("./WhatsApp.js").toString()
+var mytext = fs.readFileSync("./trashhandler.js").toString()
 var numUpper = (mytext.match(/case '/g) || []).length;
 return numUpper
         }
@@ -795,31 +795,35 @@ case 'ig': case 'instagram': case 'igdl': {
 }
 break
 //==================================================//
-case 'tiktok': case "tt": { 
-             
-    if (!text) return reply(`Example : ${prefix + command} link`);
-    if (!text.includes('tiktok')) return reply(`Link Invalid!!`);
-    reply("Please Wait..");
-    
-    // Menggunakan fetch untuk akses API TikTok milikmu
-    fetch(`https://api.tiklydown.eu.org/api/download/v5?url=${encodeURIComponent(text)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status !== 200) return m.reply('Api error');
-            
-            // Mengambil URL video dan audio
-        const title = `*Download success*`
-            const videoUrl = data.result.play;
-            const audioUrl = data.result.music;
-            
-            // bot sends downloaded video and audio
-            trashcore.sendMessage(m.chat, { caption: title, video: { url: videoUrl }}, { quoted: m });
-            trashcore.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mp4' }, { quoted: null });
-        })
-        .catch(err => reply(err.toString()));
+case 'tiktok': {
+if (!text) return reply(`Use : ${prefix + command} link`)
+// wait message
+trashreply(mess.wait)
+let data = await fg.tiktok(text)
+let json = data.result
+let caption = `[ TIKTOK - DOWNLOAD ]\n\n`
+caption += `◦ *Id* : ${json.id}\n`
+caption += `◦ *Username* : ${json.author.nickname}\n`
+caption += `◦ *Title* : ${(json.title)}\n`
+caption += `◦ *Like* : ${(json.digg_count)}\n`
+caption += `◦ *Comments* : ${(json.comment_count)}\n`
+caption += `◦ *Share* : ${(json.share_count)}\n`
+caption += `◦ *Play* : ${(json.play_count)}\n`
+caption += `◦ *Created* : ${json.create_time}\n`
+caption += `◦ *Size* : ${json.size}\n`
+caption += `◦ *Duration* : ${json.duration}`
+if (json.images) {
+json.images.forEach(async (k) => {
+await trashcore.sendMessage(m.chat, { image: { url: k }}, { quoted: m });
+})
+} else {
+trashcore.sendMessage(m.chat, { video: { url: json.play }, mimetype: 'video/mp4', caption: caption }, { quoted: m })
+setTimeout(() => {
+trashcore.sendMessage(m.chat, { audio: { url: json.music }, mimetype: 'audio/mpeg' }, { quoted: m })
+}, 3000)
 }
-break;
-
+}
+break
 case 'idch': case 'cekidch': {
 if (!text) return reply("channel link?")
 if (!text.includes("https://whatsapp.com/channel/")) return reply("Link must be valid")
@@ -1003,6 +1007,23 @@ break;
     console.error(e);
     return reply(`❌ error has occurred: ${e.message || 'err'}`);
   }
+}
+break
+
+        case 'infobot':
+case 'botinfo': {
+// wait message
+trashreply(mess.wait)
+  const botInfo = `
+╭─ ⌬ Bot Info
+│ • Name    : ${botname}
+│ • Owner   : ${ownername}
+│ • Version  : ${botversion}
+│ • Cases : ${totalfeature()}
+│ • Plugins : 30
+│ • Runtime  : ${runtime(process.uptime())}\n╰─────────────
+`
+  reply(botInfo)
 }
 break
 //━━━━━━━━━━━━━━━━━━━━━━━━//
