@@ -9,7 +9,7 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • menu                    
 │ • ping
 │ • s
-│ • repo
+│ • botinfo
 │ • listplugin        
 ╰────────────
 ╭─⊷🗿CTRL-BOT─
@@ -19,16 +19,23 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • delaccess    
 │ • autoreact    
 │ • block
-│ • autotype    
+│ • autotyping
+│ • autorecord 
+│ • autobio
 │ • >
 │ • $
 ╰────────────
 ╭─⊷🏓MEDIA-CMD─
 │ • play       
 │ • ytmp4 
+│ • ytvid 
 │ • pinterestdl 
-│ • retrieve       
-│ • tt       
+│ • retrieve
+│ • song
+│ • twitterdl
+│ • tt
+│ • tiktok  
+│ • igdl      
 │ • ytmp3      
 ╰────────────
 ╭─⊷💀BUG-CMD─
@@ -50,6 +57,19 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • revoke
 │ • approve
 │ • reject
+│ • tagall
+│ • hidetag
+│ • close
+│ • open
+│ • kickall
+│ • linkgc
+│ • setppgc
+│ • tagme
+╰────────────
+╭─⊷⚓TOOL-CMD─
+│ • enc
+│ • idch 
+│ • dev
 ╰────────────`
 
 module.exports = Menu
