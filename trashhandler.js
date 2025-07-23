@@ -47,7 +47,7 @@ const botNumber = trashcore.user.id.split(':')[0];
 const senderNumber = sender.split('@')[0]
 const trashown = (m && m.sender && [botNumber, ...global.owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)) || false;
     const premuser = JSON.parse(fs.readFileSync("./library/database/premium.json"));
-
+const isNumber = x => typeof x === 'number' && !isNaN(x)
 const formatJid = num => num.replace(/[^0-9]/g, '') + "@s.whatsapp.net";
 const isPremium = trashown || premuser.map(u => formatJid(u.id)).includes(m.sender);
 const pushname = m.pushName || `${senderNumber}`
@@ -68,7 +68,7 @@ const setting = db.data.settings[botNumber]
         if (typeof setting !== 'object') db.data.settings[botNumber] = {}
 	    if (setting) {
 //    	    if (!('anticall' in setting)) setting.anticall = false
-    		if (!botNumber(setting.status)) setting.status = 0
+    		if (!isNumber(setting.status)) setting.status = 0
     		if (!('autobio' in setting)) setting.autobio = false
             if (!('autoread' in setting)) setting.autoread = false
             if (!('autoTyping' in setting)) setting.autoTyping = false
