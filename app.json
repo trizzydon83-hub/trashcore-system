@@ -5,6 +5,11 @@
     "logo": "https://telegra.ph/file/7aa528767ed96ddc17bc2.jpg",
     "keywords": ["nodejs", "bot", "whatsapp bot", "whatsapp automation", "multi device"],
     "env": {
+    "OWNER_NAME": {
+      "description": "enter your owner name here",
+      "value": "Trashcore",
+      "required": false
+    },
     "SESSION_ID": {
       "description": "put your session ID here",
       "value": "trashcore~",
