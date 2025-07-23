@@ -360,12 +360,12 @@ await plugin(m, trashdex)
 }
 }
 if (!pluginsDisable) return
-switch (isCommand) {
+switch (command) {
 
 //==================================================//      
 case 'autotyping':
 if (!trashown) return reply(mess.owner)
-if (args.length < 1) return reply(`Example ${prefix + isCommand} on/off`)
+if (args.length < 1) return reply(`Example ${prefix + command} on/off`)
 if (q == 'on') {
 db.data.settings[botNumber].autoTyping = true
 reply(`Successfully Changed Auto Typing To ${q}`)
@@ -377,7 +377,7 @@ break
 //==================================================//      
         case 'autorecord':
 if (!trashown) return reply(mess.owner)
-if (args.length < 1) return reply(`Example ${prefix + isCommand} on/off`)
+if (args.length < 1) return reply(`Example ${prefix + command} on/off`)
 if (q == 'on') {
 db.data.settings[botNumber].autoRecord = true
 reply(`Successfully Changed Auto Record To ${q}`)
@@ -389,7 +389,7 @@ break;
 //==================================================//      
         case 'autobio':
 if (!trashown) return reply(mess.owner)
-if (args.length < 1) return reply(`Example ${prefix + isCommand} on/off`)
+if (args.length < 1) return reply(`Example ${prefix + command} on/off`)
 if (q == 'on') {
 db.data.settings[botNumber].autobio = true
 reply(`Successfully Changed Auto Bio To ${q}`)
@@ -670,7 +670,7 @@ case 'song': {
 break
 //==================================================//     
         case "play":{
-                if (!text) return reply(`\n*ex:* ${prefix + isCommand} impossible\n`)
+                if (!text) return reply(`\n*ex:* ${prefix + command} impossible\n`)
            
     let res = await fetch(`https://ochinpo-helper.hf.space/yt?query=${encodeURIComponent(text)}`);
     if (!res.ok) throw new Error('API not found');
@@ -797,7 +797,7 @@ break
 //==================================================//
 case 'tiktok': case "tt": { 
              
-    if (!text) return reply(`Example : ${prefix + isCommand} link`);
+    if (!text) return reply(`Example : ${prefix + command} link`);
     if (!text.includes('tiktok')) return reply(`Link Invalid!!`);
     reply("Please Wait..");
     
