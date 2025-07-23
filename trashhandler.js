@@ -6,7 +6,6 @@ const os = require('os')
 const fs = require('fs')
 const fg = require('api-dylux')
 const fetch = require('node-fetch');
-const util = require('utils')
 const axios = require('axios')
 const { exec, execSync } = require("child_process")
 const chalk = require('chalk')
