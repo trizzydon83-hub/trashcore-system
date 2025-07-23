@@ -12,7 +12,7 @@ global.ownername = "Trashcore"
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Bot Setting
 global.botname = "Trashcore"
-global.botversion = "1.2.0"
+global.botversion = "1.4.0"
 global.typebot = "Plugin"
 global.session = "trashsession"
 global.connect = true
