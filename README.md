@@ -36,7 +36,7 @@
 
 
 
-2.[`Scan Session first server`](https://trashcore-pairing-zaht.onrender.com/pair)
+2.[`Scan Session first server`](https://trashcore-pairing-2.onrender.com/pair)
 
 
          *OR*
