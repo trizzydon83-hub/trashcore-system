@@ -206,7 +206,7 @@ caption: ` [ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉�
 })
 
 
-			await trashcore.newsletterFollow(channelId);
+			
 
             console.log('>Trashcore Bot is Connected< [ ! ]')
 		}
