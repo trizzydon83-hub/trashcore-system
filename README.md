@@ -41,7 +41,7 @@
 
          *OR*
 
-[`Scan Session second server`](https://trashcore-pairing-1.onrender.com)
+[`Scan Session second server`](https://trashcore-pairing-1.onrender.com/pair)
 
 
 
