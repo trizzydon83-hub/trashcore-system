@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://i.imgur.com/3480w2K.jpeg" alt="Trashcore Bot" width="500"/>
+<img src="https://url.bwmxmd.online/Adams.36pxd22m.jpg" alt="Trashcore Bot" width="500"/>
 
 
 </p>
