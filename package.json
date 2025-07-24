@@ -2,7 +2,7 @@
   "name": "phoenix-bots",
   "version": "1.0.0",
   "description": "x",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
    "code": "node main.js",
         "start": "node index.js"
