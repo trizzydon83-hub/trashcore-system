@@ -25,6 +25,17 @@ const {
 	pomfCDN, 
 	uploadFile
 } = require('./library/scrapes/uploader');
+global.db.data = JSON.parse(fs.readFileSync('./library/database/database.json'))
+if (global.db.data) global.db.data = {
+sticker: {},
+database: {}, 
+game: {},
+others: {},
+users: {},
+chats: {},
+settings: {},
+...(global.db.data || {})
+}
 ///////////database access/////////////////
 const { addPremiumUser, delPremiumUser } = require("./library/lib/premiun");
 /////////exports////////////////////////////////
@@ -64,6 +75,51 @@ const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
 console.log(chalk.black(chalk.bgWhite(!command ? '[ MESSAGE ]' : '[ COMMAND ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> From'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> In'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
 /////////quoted functions//////////////////
 const fkontak = { key: {fromMe: false,participant: `0@s.whatsapp.net`, ...(from ? { remoteJid: "status@broadcast" } : {}) }, message: { 'contactMessage': { 'displayName': `🩸⃟‣𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄-𝐂𝐋𝐈𝐄𝐍𝐓≈🚭`, 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;Vinzx,;;;\nFN:${pushname},\nitem1.TEL;waid=${sender.split('@')[0]}:${sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`, 'jpegThumbnail': { url: 'https://files.catbox.moe/yqbio5.jpg' }}}}
+let chats = global.db.data.chats[from]
+               if (typeof chats !== 'object') global.db.data.chats[from] = {}
+               if (chats) {
+                   if (!('antilink' in chats)) chats.antilink = false
+                  if (!('antilinkgc' in chats)) chats.antilinkgc = false
+               } else global.db.data.chats[from] = {
+                  antilinkgc: false,
+                  antilinkgc: false
+               }
+    if (db.data.chats[m.chat].antilinkgc) {
+            if (budy.match(`chat.whatsapp.com`)) {
+               bvl = `\`\`\`「 GC Link Detected 」\`\`\`\n\nAdmin has sent a gc link, admin is free to send any link😇`
+if (isAdmins) return m.reply(bvl)
+if (m.key.fromMe) return m.reply(bvl)
+if (trashown) return m.reply(bvl)
+               await trashcore.sendMessage(m.chat,
+			    {
+			        delete: {
+			            remoteJid: m.chat,
+			            fromMe: false,
+			            id: m.key.id,
+			            participant: m.key.participant
+			        }
+			    })
+			trashcore.sendMessage(from, {text:`\`\`\`「 GC Link Detected 」\`\`\`\n\n@${m.sender.split("@")[0]} has sent a link and successfully deleted`, contextInfo:{mentionedJid:[m.sender]}}, {quoted:m})
+            }
+        }
+        if (db.data.chats[m.chat].antilink) {
+            if (budy.match('http') && budy.match('https')) {
+               bvl = `\`\`\`「 Link Detected 」\`\`\`\n\nAdmin has sent a link, admin is free to send any link😇`
+if (isAdmins) return m.reply(bvl)
+if (m.key.fromMe) return m.reply(bvl)
+if (trashown) return m.reply(bvl)
+               await trashcore.sendMessage(m.chat,
+			    {
+			        delete: {
+			            remoteJid: m.chat,
+			            fromMe: false,
+			            id: m.key.id,
+			            participant: m.key.participant
+			        }
+			    })
+			trashcore.sendMessage(from, {text:`\`\`\`「 Link Detected 」\`\`\`\n\n@${m.sender.split("@")[0]} has sent a link and successfully deleted`, contextInfo:{mentionedJid:[m.sender]}}, {quoted:m})
+            }
+        }
 const setting = db.data.settings[botNumber]
         if (typeof setting !== 'object') db.data.settings[botNumber] = {}
 	    if (setting) {
@@ -115,7 +171,7 @@ if (db.data.settings[botNumber].autobio) {
 let setting = db.data.settings[botNumber]
 if (new Date() * 1 - setting.status > 1000) {
 let uptime = await runtime(process.uptime())
-await trashcore.updateProfileStatus(`✳️ Silencer brutality || ✅ Runtime : ${uptime}`)
+await trashcore.updateProfileStatus(`✳️ TRASHCORE BOT || ✅ Runtime : ${uptime}`)
 setting.status = new Date() * 1
 }
 }
@@ -370,15 +426,7 @@ reply(`bot is always online ✅`)
     ],
   });
 }
-
-                                      
-                                
-                            
-    
-   
-  
-
-
+          
     ////anti delete//////
 const storeFile = "./src/store.json";
 
@@ -711,6 +759,34 @@ db.data.settings[botNumber].autoTyping = false
 reply(`Successfully Changed Auto Typing To ${q}`)
 }
 break
+//==================================================//           
+        case 'antilink': {
+               if (!m.isGroup) return reply(mess.group)
+if (!isAdmins && !trashown) return reply(mess.admins)
+               if (args.length < 1) return reply('on/off?')
+               if (args[0] === 'on') {
+                  db.data.chats[from].antilink = true
+                  reply(`${command} is enabled`)
+               } else if (args[0] === 'off') {
+                  db.data.chats[from].antilink = false
+                  reply(`${command} is disabled`)
+               }
+            }
+            break
+//==================================================//       
+        case 'antilinkgc': {
+               if (!m.isGroup) return m.reply(mess.group)
+if (!isAdmins && !trashown) return m.reply(mess.owner)
+               if (args.length < 1) return m.reply('on/off?')
+               if (args[0] === 'on') {
+                  db.data.chats[from].antilinkgc = true
+                  m.reply(`${command} is enabled`)
+               } else if (args[0] === 'off') {
+                  db.data.chats[from].antilinkgc = false
+                  m.reply(`${command} is disabled`)
+               }
+            }
+            break
 //==================================================//      
         case 'autorecord':
 if (!trashown) return reply(mess.owner)
