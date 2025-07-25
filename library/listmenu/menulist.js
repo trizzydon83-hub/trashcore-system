@@ -29,6 +29,7 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • play       
 │ • ytmp4 
 │ • ytvid 
+│ • yts
 │ • pinterestdl 
 │ • retrieve
 │ • song
