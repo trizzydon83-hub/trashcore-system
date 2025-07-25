@@ -747,6 +747,19 @@ case 'repo': {
   reply(botInfo)
 }
 break
+    case 'yts': case 'ytsearch': {
+                if (!text) return reply(`Example : ${prefix + command} faded`)
+                let yts = require("yt-search")
+                let search = await yts(text)
+                let teks = 'YouTube Search\n\n Result From '+text+'\n\n'
+                let no = 1
+                for (let i of search.all) {
+                    teks += `❤️ No : ${no++}\n❤️Type : ${i.type}\n ❤️Video ID : ${i.videoId}\n❤️ Title : ${i.title}\n❤️ Views : ${i.views}\n❤️ Duration : ${i.timestamp}\n❤️ Uploaded : ${i.ago}\n❤️ Url : ${i.url}\n\n─────────────────\n\n`
+                }
+                trashcore.sendMessage(m.chat, { image: { url: search.all[0].thumbnail },  caption: teks }, { quoted: m })
+            }
+            break    
+                    
 //==================================================//      
 case 'autotyping':
 if (!trashown) return reply(mess.owner)
