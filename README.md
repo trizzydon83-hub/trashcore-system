@@ -89,6 +89,15 @@ npm start
 
 
 > This base $ bot was created by Trashcore devs
-> Current version: 1.4.0
-> Released on: 20th July 2025
-> Last updated: 26th July 2025
+
+
+
+
+
+> CURRENT VERSION: 1.4.0
+>
+> 
+> RELEASE ON: 20th July 2025
+>
+> 
+> LAST UPDATED: 26th July 2025
