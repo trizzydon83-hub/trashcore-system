@@ -27,7 +27,7 @@
     },
 "AUTO_RECORD": {
       "description": "type true if you want your bot to show fake recording in your chat if else type false",
-      "value": "true",
+      "value": "false",
       "required": false
     },
    "AUTO_STATUS": {
