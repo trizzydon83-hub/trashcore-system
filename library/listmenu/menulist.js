@@ -2,15 +2,18 @@ const chalk = require('chalk')
 const fs = require('fs')
 const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │▢ Owner:${global.ownername}
-│▢ Version: 1.4.0
+│▢ Version: 1.5.0
 │▢ Type: ${global.typebot}
 ╰────────────
 ╭─⊷🐦‍🔥MAIN-CMD─
 │ • menu                    
 │ • ping
+│ • ping2
+│ • uptime 
 │ • s
 │ • botinfo
-│ • listplugin        
+│ • listplugin 
+│ • update 
 ╰────────────
 ╭─⊷🗿CTRL-BOT─
 │ • public                    
@@ -29,7 +32,7 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • play       
 │ • ytmp4 
 │ • ytvid 
-│ • yts
+│ • yts 
 │ • pinterestdl 
 │ • retrieve
 │ • song
@@ -50,6 +53,9 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • gethtml
 │ • getpp 
 │ • getplugin 
+│ • save
+│ • gitclone
+│ • weather 
 ╰────────────
 ╭─⊷👥GRUP-CMD─
 │ • add
@@ -67,12 +73,43 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • kickall
 │ • linkgc
 │ • setppgc
+│ • setdesc
 │ • tagme
 ╰────────────
 ╭─⊷⚓TOOL-CMD─
 │ • enc
 │ • idch 
 │ • dev
+╰────────────
+╭─⊷🩸EPHOTO-CMD─
+│ • glithtext
+│ • lighteffects 
+│ • writetext
+│ • advancedglow
+│ • typographytext
+│ • pixelglitch
+│ • neonglitch 
+│ • flagtext
+│ • flag3dtext
+│ • deletingtext
+│ • blackpinkstyle
+│ • glowingtex
+│ • underwater 
+│ • logomaker
+│ • cartoonstyle
+│ • papercutstyle
+│ • watercolortext
+│ • effectclouds
+│ • blackpinklogo
+│ • gradienttext
+│ • luxurygold
+│ • sandsummer
+│ • multicoloredneon
+│ • galaxywallpaper 
+│ • 1917style
+│ • galaxystyle
+│ • royaltext
+│ • freecreate
 ╰────────────`
 
 module.exports = Menu
