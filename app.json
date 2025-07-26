@@ -20,6 +20,16 @@
       "value": "true",
       "required": false
     },
+ "AUTO_TYPE": {
+      "description": "type true if you want your bot to show fake typing in your chats  if else type false",
+      "value": "true",
+      "required": false
+    },
+"AUTO_RECORD": {
+      "description": "type true if you want your bot to show fake recording in your chat if else type false",
+      "value": "true",
+      "required": false
+    },
    "AUTO_STATUS": {
       "description": "type true if you want bot to view status if else type false",
       "value": "true",
