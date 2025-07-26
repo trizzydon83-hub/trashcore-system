@@ -94,7 +94,7 @@ npm start
 
 
 
-> CURRENT VERSION: 1.4.0
+> CURRENT VERSION: 1.5.0
 >
 > 
 > RELEASE ON: 20th July 2025
