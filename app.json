@@ -20,6 +20,16 @@
       "value": "true",
       "required": false
     },
+  "AUTO_TYPE": {
+      "description": "type true if you want bot to show fake typing presence in your chats if else type false",
+      "value": "true",
+      "required": false
+    },
+  "AUTO_RECORD": {
+      "description": "type true if you want bot to show fake record presence in your chats if else type false",
+      "value": "false",
+      "required": false
+    },
     "PACK_NAME": {
       "description": "type your sticker pack name here",
       "value": "Trashcore pack",
