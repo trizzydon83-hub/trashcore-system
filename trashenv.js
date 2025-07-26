@@ -18,6 +18,9 @@ global.typebot = "Plugin"
 global.session = "trashsession"
 global.connect = true
 global.statusview = process.env.AUTO_STATUS || true
+global.antilinkgc = process.env.ANTILINK_GROUP || true
+global.autoTyping = process.env.AUTO_TYPE || false
+global.autoRecord = process.env.AUTO_RECORD || false
 global.thumb = "https://files.catbox.moe/4ryp6k.jpg"
 global.wagc = "https://chat.whatsapp.com/BPyIptm3ZH68y4pSPrLMyq?mode=r_t"
 //━━━━━━━━━━━━━━━━━━━━━━━━//
