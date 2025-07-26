@@ -53,34 +53,6 @@
 * [Bot hosting panel](https://bot-hosting.net/)
 
 
-
-
-
-## Contents:
-- [Information](#information)
-- [Language Support](#support-language)
-- [Buildpack Heroku](#heroku-buildpack)
-- [Command For Termux](#command-for-termux)
-- [Mongodb Account](#how-to-get-mongodb-uri)
-- [Mongodb Connect](#how-to-connect-to-mongodb)
-- [Edit Owner](#edit-owner)
-- [Deploy To Heroku](#how-to-deploy)
-- [Donate](#donate)
-- [Official Group](#official-group)
-- [Thanks To](#thanks-to)
-
----
-
-## Information
-> Este proyecto es una base en desarrollo. Base Bot es un bot de WhatsApp construido con [Baileys]github.com/adiwajshing/baileys) library.
-
-## Support Language
-
-- [x] Spanish
-- [x] English
-
-But some I have not changed the language 🛐
-
 ## Heroku Buildpack
 ```bash
 heroku/nodejs
@@ -107,40 +79,16 @@ npm start
 
 - Download [Termux V18] 
 
-## How to Get Mongodb URI
+## How to Deploy bot 
 
-- Not yet Supported
-
-## HOW TO CONNECT TO MONGODB
-
-- Not yet Supported
-
-## Edit Owner 
-
-<details>
-    <summary> <b>Edit Owner options/setting.js</b></summary><br/>
+- *First get your `session ID` from pairing site
+- Set your `session ID` plus other settings in the Heroku config vars if you are using heroku
+- after deploy is done on heroku `activate your dynos` to start bot
+- `Download zip` from the code area and carefully edit your settings in the `trashenv.js` file if you are deploying on the panel
+- `unarchive the zip` then select all files,move with`../`then start your server after one or two minutes your bot will be ready for use*
 
 
-## ```HOW TO DEPLOY```
-
-[`Click Here For Tutorial`](youtu.be/RaUQUTrXK90?t=4m28s)<br>
-
-----------
-
-<p align="center">
-  <a href="https://youtu.be/SdKHkld2NcI"><img src="https://a.top4top.io/p_2081imvxm1.jpg" />
-</p>
-
-
-# Official Group
-<a href="https://chat.whatsapp.com/BPyIptm3ZH68y4pSPrLMyq?mode=r_t"><img src="https://img.shields.io/badge/Official Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
-
-# Thanks to
-- God.
-- Jesus Christ.
-- My parents
-- Trashcore ( Base & Author ) 
-- Supreme Shakur( master friend)
-- Shanny ( My wife,,maybe)
-- My Subscribers
-- All user script 
+> This base $ bot was created by Trashcore devs
+> Current version: 1.4.0
+> Released on: 20th July 2025
+> Last updated: 26th July 2025
