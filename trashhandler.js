@@ -19,13 +19,6 @@ const speed = require('performance-now')
 const { Sticker } = require('wa-sticker-formatter');
 const { igdl } = require("btch-downloader");
 const yts = require ('yt-search');
-///////////scrapes/////////////////////////////
-const { 
-	CatBox, 
-	fileIO, 
-	pomfCDN, 
-	uploadFile
-} = require('./library/scrapes/uploader');
 const { appname,antidel, herokuapi} = require("./set.js");
 global.db.data = JSON.parse(fs.readFileSync('./library/database/database.json'))
 if (global.db.data) global.db.data = {
