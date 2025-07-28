@@ -56,7 +56,23 @@ const useMobile = process.argv.includes("--mobile")
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
+const welcomeMessage = `
+[[ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆 ⿻ ༑]]
+┏─•⛩️ ${global.botname} ⛩️•─⬣[⿻
 
+👋 Hii, I Am ${global.botname}
+ [⿻] 🌌 Version      : 1.5.0
+ [⿻] 👤 Owner  	     : ${global.owner}
+ [⿻] 📚 Library      : WBaileys MD
+ [⿻] 📱 Status       : Online
+ [⿻] 📝 Session     :  ${global.session}
+ 
+ [⿻] 🌎 Base By    : trashcoredevs
+
+┗─•${global.botname}•─⬣[⿻
+[[ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆 𝑩𝒚 𝒕𝒓𝒂𝒔𝒉𝒄𝒐𝒓𝒆༢⿻ ༑]]
+`;
+    console.log(welcomeMessage);  
 const sessionDir = path.join(__dirname, 'session');
 const credsPath = path.join(sessionDir, 'creds.json');
 
@@ -113,38 +129,17 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
 
     // login use pairing code
    // source code https://github.com/WhiskeySockets/Baileys/blob/master/Example/example.ts#L61
-   if (pairingCode && !trashcore.authState.creds.registered) {
-      if (useMobile) throw new Error('Cannot use pairing code with mobile api')
-
-      let phoneNumber
-      if (!!phoneNumber) {
-         phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-
-         if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
-            console.log(chalk.bgBlack(chalk.redBright("Start with country code of your WhatsApp Number, Example : +254xxx")))
-            process.exit(0)
-         }
-      } else {
-         phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number \nFor example: +254xxx : `)))
-         phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-
-         // Ask again when entering the wrong number
-         if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
-            console.log(chalk.bgBlack(chalk.redBright("Start with country code of your WhatsApp Number, Example : +254xxx")))
-
-            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number \nFor example: +254xxx : `)))
-            phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-            rl.close()
-         }
-      }
-
-      setTimeout(async () => {
-         let code = await trashcore.requestPairingCode(phoneNumber)
-         code = code?.match(/.{1,4}/g)?.join("-") || code
-         console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)))
-      }, 3000)
-   }
-
+        if (global.connect && !trashcore.authState.creds.registered) {
+        try {
+            const phoneNumber = await question(chalk.cyan(`\n[ ᯤ ] Trashcore (--||--) Enter Your Number:\n`));
+            const code = await trashcore.requestPairingCode(phoneNumber.trim());
+            console.log(chalk.green(`\n[ ᯤ ] trashcore (--||--) Pairing Code:\n`), code);
+        } catch (error) {
+            console.error(chalk.red(`\nError during pairing:`), error.message);
+            return;
+        }
+    }
+    store?.bind(trashcore.ev)
 trashcore.ev.on('connection.update', async (update) => {
 	const {
         
@@ -192,7 +187,7 @@ caption: ` [ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉�
 ┏─•⛩️ ${global.botname} ⛩️•─⬣[⿻
 
 👋 Hii, I Am ${global.botname}
- [⿻] 🌌 Version      : 1.5.0
+ [⿻] 🌌 Version      : 1.3.0
  [⿻] 👤 Owner  	     : ${global.owner}
  [⿻] 📚 Library      : WBaileys MD
  [⿻] 📱 Status       : Online
