@@ -2,7 +2,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │▢ Owner:${global.ownername}
-│▢ Version: 1.5.0
+│▢ Version: 1.6.0
 │▢ Type: ${global.typebot}
 ╰────────────
 ╭─⊷🐦‍🔥MAIN-CMD─
@@ -25,6 +25,8 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • autotyping
 │ • autorecord 
 │ • autobio
+│ • setprefix 
+│ • autostatusview 
 │ • >
 │ • $
 ╰────────────
@@ -75,6 +77,10 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • setppgc
 │ • setdesc
 │ • tagme
+│ • warn
+│ • unwarn
+│ • welcome 
+│ • goodbye 
 ╰────────────
 ╭─⊷⚓TOOL-CMD─
 │ • enc
