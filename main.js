@@ -105,6 +105,7 @@ let { version, isLatest } = await fetchLatestBaileysVersion()
 const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
     const msgRetryCounterCache = new NodeCache() // for retry message, "waiting message"
     const trashcore = makeWASocket({
+        version: [2, 3000, 1023223821],
         logger: pino({ level: 'silent' }),
         printQRInTerminal: !pairingCode, // popping up QR in terminal log
       mobile: useMobile, // mobile api (prone to bans)
@@ -252,7 +253,15 @@ trashcore.ev.on("messages.upsert",  () => { })
    }
  )  
     
+trashcore.ev.on('group-participants.update', async (anu) => {
+    const iswel = db.data.chats[anu.id]?.welcome || false
+    const isLeft = db.data.chats[anu.id]?.goodbye || false
 
+    let {
+      welcome
+    } = require('./library/lib/welcome')
+    await welcome(iswel, isLeft, trashcore, anu)
+  })
             
     trashcore.ev.on('messages.upsert', async chatUpdate => {
         //console.log(JSON.stringify(chatUpdate, undefined, 2))

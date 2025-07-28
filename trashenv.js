@@ -5,7 +5,7 @@ if (fs.existsSync('.env')) require('dotenv').config({ path: __dirname+'/.env' })
 
 global.SESSION_ID = process.env.SESSION_ID || '' 
 // Owner Setting
-global.prefix = process.env.BOT_PREFIX ||'.'
+global.xprefix = process.env.BOT_PREFIX ||'.'
 global.owner = ["254104245659",]
 global.error = ["6666",]
 global.ownername = process.env.OWNER_NAME ||'Trashcore'
@@ -13,7 +13,7 @@ global.antidelete = process.env.ANTI_DELETE || true
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Bot Setting
 global.botname = "Trashcore"
-global.botversion = "1.4.0"
+global.botversion = "1.6.0"
 global.typebot = "Plugin"
 global.session = "trashsession"
 global.connect = true
@@ -23,6 +23,7 @@ global.autoTyping = process.env.AUTO_TYPE || false
 global.autoRecord = process.env.AUTO_RECORD || false
 global.thumb = "https://files.catbox.moe/4ryp6k.jpg"
 global.wagc = "https://chat.whatsapp.com/BPyIptm3ZH68y4pSPrLMyq?mode=r_t"
+global.caption = "Trashcore media"
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Sticker Marker
 global.packname = process.env.PACK_NAME ||'𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄'

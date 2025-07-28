@@ -42,9 +42,8 @@ var body = (m.mtype === 'interactiveResponseMessage') ? JSON.parse(m.message.int
 const { smsg, fetchJson, getBuffer, fetchBuffer, getGroupAdmins, TelegraPh, isUrl, hitungmundur, sleep, clockString, checkBandwidth, runtime, tanggal, getRandom } = require('./library/lib/function')
 // Main Setting (Admin And Prefix )///////
 const budy = (typeof m.text === 'string') ? m.text : '';
-const prefixRegex = /^[°zZ#$@*+,.?=''():√%!¢£¥€π¤ΠΦ_&><`™©®Δ^βα~¦|/\\©^]/;
-const prefix = prefixRegex.test(body) ? body.match(prefixRegex)[0] : '.';
-const isCmd = body.startsWith(prefix);
+        const prefix = ['.', '/'] ? /^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@#$%^&.©^]/gi.test(body) ? body.match(/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@#$%^&.©^]/gi)[0] : "" : global.xprefix
+const isCmd = body.startsWith(global.xprefix);
 const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : '';
 const args = body.trim().split(/ +/).slice(1)
 const text = q = args.join(" ")
@@ -60,6 +59,7 @@ const pushname = m.pushName || `${senderNumber}`
 const isBot = botNumber.includes(senderNumber)
 const quoted = m.quoted ? m.quoted : m
 const mime = (quoted.msg || quoted).mimetype || ''
+const qmsg = (quoted.msg || quoted)
 const groupMetadata = m.isGroup ? await trashcore.groupMetadata(from).catch(e => {}) : ''
 const groupName = m.isGroup ? groupMetadata.subject : ''
 const participants = m.isGroup ? await groupMetadata.participants : ''
@@ -75,9 +75,15 @@ let chats = global.db.data.chats[from]
                if (chats) {
                    if (!('antilink' in chats)) chats.antilink = false
                   if (!('antilinkgc' in chats)) chats.antilinkgc = false
+                           if (!('welcome' in chats)) chats.welcome = false
+        if (!('goodbye' in chats)) chats.goodbye = false
+        if (!('warn' in chats)) chats.warn = {}
                } else global.db.data.chats[from] = {
                   antilinkgc: false,
-                  antilinkgc: false
+                  antilinkgc: false,
+                  welcome: false,
+                  goodbye: false,
+                  warn: {} 
                }
     if (db.data.chats[m.chat].antilinkgc) {
             if (budy.match(`chat.whatsapp.com`)) {
@@ -115,6 +121,23 @@ if (trashown) return m.reply(bvl)
 			trashcore.sendMessage(from, {text:`\`\`\`「 Link Detected 」\`\`\`\n\n@${m.sender.split("@")[0]} has sent a link and successfully deleted`, contextInfo:{mentionedJid:[m.sender]}}, {quoted:m})
             }
         }
+        if (db.data.chats[m.chat].warn && db.data.chats[m.chat].warn[m.sender]) {
+      const warnings = db.data.chats[m.chat].warn[m.sender]
+
+      if (warnings >= setting.warnCount) {
+        if (!isBotAdmins || isAdmins || trashown) return
+
+        await trashcore.sendMessage(m.chat, {
+          delete: {
+            remoteJid: m.chat,
+            fromMe: false,
+            id: m.key.id,
+            participant: m.sender
+          }
+        })
+      }
+    }
+
 const setting = db.data.settings[botNumber]
         if (typeof setting !== 'object') db.data.settings[botNumber] = {}
 	    if (setting) {
@@ -741,9 +764,8 @@ contextInfo: {
 const example = (teks) => {
 return `\n *invalid format!*\n`
 }
-
-/////////////plugins commands/////////////
 const menu = require('./library/listmenu/menulist');
+/////////////plugins commands/////////////
 const pluginsLoader = async (directory) => {
 let plugins = []
 const folders = fs.readdirSync(directory)
@@ -766,7 +788,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true
 const plugins = await pluginsLoader(path.resolve(__dirname, "trashplugs"))
-const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,menu,addPremiumUser, args,delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins,quoted,from,groupMetadata,downloadAndSaveMediaMessage,forceclose}
+const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,addPremiumUser, args,delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins,quoted,from,groupMetadata,downloadAndSaveMediaMessage,forceclose,menu}
 for (let plugin of plugins) {
 if (plugin.command.find(e => e == command.toLowerCase())) {
 pluginsDisable = false
@@ -926,6 +948,30 @@ if (!m.quoted) return reply("quote a viewonce message eh")
     }
       }
 	break;
+//==================================================//  
+case 'goodbye': {
+  if (!m.isGroup) return reply(mess.owner)
+  if (!isAdmins) return reply(mess.admin)
+  if (args[0] === "on") {
+    if (db.data.chats[m.chat].goodbye) return reply('Already activated previously')
+    db.data.chats[m.chat].goodbye = true
+    reply('Successfully activated goodbye!')
+  } else if (args[0] === "off") {
+    if (!db.data.chats[m.chat].goodbye) return reply('Already deactivated previously')
+    db.data.chats[m.chat].goodbye = false
+    reply('Successfully deactivated goodbye!')
+  } else {
+    reply('Command not recognized. Use "on" to activate or "off" to deactivate.')
+  }
+}
+break;              
+//==================================================//           
+        case 'setprefix':
+                if (!trashown) return reply (mess.owner)
+                if (!text) return reply(`Example : ${prefix + command} desired prefix`)
+                global.xprefix = text
+                reply(`Prefix successfully changed to ${text}`)
+                break
 //==================================================//              
         case "desc": case "setdesc": { 
                  if (!m.isGroup) return reply (mess.group)
@@ -1042,6 +1088,88 @@ if (!isAdmins && !trashown) return m.reply(mess.owner)
             }
             break
 //==================================================//      
+        case 'autoswview':
+    case 'autostatusview':{
+             if (!trashown) return (mess.owner)
+               if (args.length < 1) return reply('on/off?')
+               if (args[0] === 'on') {
+                  statusview = true
+                  reply(`${command} is enabled`)
+               } else if (args[0] === 'off') {
+                  statusview= false
+                  reply(`${command} is disabled`)
+               }
+            }
+            break
+//==================================================//        
+        case 'unwarning':
+    case 'unwarn': {
+      if (!m.isGroup) return reply(mess.owner)
+      if (!isAdmins) return reply(mess.admin)
+      
+
+      let users = m.mentionedJid[0] ?
+        m.mentionedJid[0] :
+        m.quoted ?
+        m.quoted.sender :
+        text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+
+      if (!users) return reply(`Tag/Reply target${command}`)
+      if (trashown) return reply('feature reserved for owner or sudo numbers only')
+
+      if (!db.data.chats[m.chat].warn) db.data.chats[m.chat].warn = {}
+
+      if (!db.data.chats[m.chat].warn[users] || db.data.chats[m.chat].warn[users] === 0) {
+        return reply(`User is already in the warning list.`)
+      }
+
+      db.data.chats[m.chat].warn[users] -= 1
+
+      const sisa = db.data.chats[m.chat].warn[users]
+
+      trashcore.sendTextWithMentions(m.chat, `✅ Success *${command}* @${users.split('@')[0]}\nRemoved Warning: ${sisa}/${setting.warnCount}`, m)
+      if (db.data.chats[m.chat].warn[users] === 0) {
+        delete db.data.chats[m.chat].warn[m.sender];
+      }
+    }
+    break
+//==================================================//   
+        case 'warning':
+    case 'warn': {
+      if (!m.isGroup) reply(mess.group)
+      if (!isAdmins) reply(mess.admin)
+
+      let users = m.mentionedJid[0] ?
+        m.mentionedJid[0] :
+        m.quoted ?
+        m.quoted.sender :
+        text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+
+      if (!users) return reply(`Tag/Reply target with${command}`)
+      if (!trashown) return reply('feature reserved for owner or sudo numbers only')
+
+      if (!db.data.chats[m.chat].warn) db.data.chats[m.chat].warn = {}
+      db.data.chats[m.chat].warn[users] = (db.data.chats[m.chat].warn[users] || 0) + 1
+
+      const total = db.data.chats[m.chat].warn[users]
+
+      trashcore.sendTextWithMentions(m.chat, `⚠️ Success *${command}* @${users.split('@')[0]}\nTotal Warning: ${total}/3`, m)
+
+      if (total >= setting.warnCount) {
+        if (!isAdmins) return
+
+        await trashcore.sendMessage(m.chat, {
+          text: `🚫 @${users.split('@')[0]} your ${total}/${setting.warnCount} warning is on count.`,
+          mentions: [users]
+        })
+
+        await trashcore.groupParticipantsUpdate(m.chat, [users], 'remove')
+        delete db.data.chats[m.chat].warn[users]
+      }
+    }
+    break
+
+//==================================================//      
         case 'autorecord':
 if (!trashown) return reply(mess.owner)
 if (args.length < 1) return reply(`Example ${prefix + command} on/off`)
@@ -1112,25 +1240,27 @@ reply("Success opened group chat,all members can send messages in group now")
 break
 //==================================================//
 case 'tagall': {
-if (!m.isGroup) return reply(mess.group)
-if (!trashown) return reply(mess.owner)
-if (!text) return reply("fuck you")
-trashcore.sendMessage(m.chat, {
-text: "@" + m.chat,
-contextInfo: {
-mentionedJid: (await (await trashcore.groupMetadata(m.chat)).participants).map(a => a.id),
-groupMentions: [
-{
-groupJid: m.chat,
-groupSubject: text
-}
-]
-}
-}, {
-quoted: m
-})
-}
-break
+      if (!m.isGroup) return (mess.group)
+      if (!trashown && !isAdmins) return reply(mess.owner)
+      let teks = `*👥 Tag All By Admin*
+
+@${m.chat}
+ 
+Message: ${q ? q : 'no message'}`
+      trashcore.sendMessage(m.chat, {
+        text: teks,
+        contextInfo: {
+          mentionedJid: participants.map(a => a.id),
+          groupMentions: [{
+            groupJid: m.chat,
+            groupSubject: "everyone"
+          }]
+        }
+      }, {
+        quoted: m
+      })
+    }
+    break
 //==================================================//
 case 'h':
 case 'hidetag': {
@@ -1152,6 +1282,23 @@ quoted: m
 }
 }
 break
+//==================================================//  
+        case 'welcome': {
+  if (!m.isGroup) return reply(mess.group)
+  if (!isAdmins) return reply(mess.admin)
+  if (args[0] === "on") {
+    if (db.data.chats[m.chat].welcome) return reply('Already activated previously')
+    db.data.chats[m.chat].welcome = true
+    reply('Successfully activated welcome!')
+  } else if (args[0] === "off") {
+    if (!db.data.chats[m.chat].welcome) return reply('Already deactivated previously')
+    db.data.chats[m.chat].welcome = false
+    reply('Successfully deactivated welcome!')
+  } else {
+    reply('Command not recognized. Use "on" to activate or "off" to deactivate.')
+  }
+}
+break;
 //==================================================//
 case 'kick': {
 if (!m.isGroup) return reply(mess.group)
