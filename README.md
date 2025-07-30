@@ -94,10 +94,10 @@ npm start
 
 
 
-> CURRENT VERSION: 1.5.0
+> CURRENT VERSION: 1.6.0
 >
 > 
 > RELEASE ON: 20th July 2025
 >
 > 
-> LAST UPDATED: 26th July 2025
+> LAST UPDATED: 30th July 2025
