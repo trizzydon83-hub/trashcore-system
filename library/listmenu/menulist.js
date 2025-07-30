@@ -36,7 +36,7 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • ytvid 
 │ • yts 
 │ • pinterestdl 
-│ • retrieve
+│ • vv
 │ • song
 │ • twitterdl
 │ • tt
