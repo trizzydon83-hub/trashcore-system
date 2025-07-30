@@ -294,7 +294,7 @@ const qtext = { key: {fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat
 
 ////////////////Reply Message////////////////
 const replypic = fs.readFileSync('./library/media/connect.jpg');
-
+const quotedMessage = m.quoted?.message?.extendedTextMessage?.contextInfo?.quotedMessage || m.quoted?.message?.imageMessage || m.quoted?.message?.videoMessage;
 async function reply(teks) {
 trashcore.sendMessage(m.chat, {
 text: teks,
@@ -788,7 +788,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true
 const plugins = await pluginsLoader(path.resolve(__dirname, "trashplugs"))
-const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,addPremiumUser, args,delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins,quoted,from,groupMetadata,downloadAndSaveMediaMessage,forceclose,menu}
+const trashdex = { trashown, reply,replymenu,command,isCmd, text, botNumber, prefix, reply,fetchJson,example, totalfeature,trashcore,m,q,mime,sleep,fkontak,addPremiumUser, args,delPremiumUser,isPremium,trashpic,trashdebug,sleep,isAdmins,groupAdmins,isBotAdmins,quoted,from,groupMetadata,downloadAndSaveMediaMessage,forceclose,menu,quotedMessage}
 for (let plugin of plugins) {
 if (plugin.command.find(e => e == command.toLowerCase())) {
 pluginsDisable = false
@@ -928,26 +928,7 @@ let regex1 = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
                 }
                 trashcore.sendMessage(m.chat, { image: { url: search.all[0].thumbnail },  caption: teks }, { quoted: m })
             }
-            break  //==================================================//       
-        case "vv": case "retrieve":{
-
-if (!m.quoted) return reply("quote a viewonce message eh")
-
-  const quotedMessage = m.msg?.contextInfo?.quotedMessage;
-
-    if (quotedMessage.imageMessage) {
-      let imageCaption = quotedMessage.imageMessage.caption;
-      let imageUrl = await trashcore.downloadAndSaveMediaMessage(quotedMessage.imageMessage);
-      trashcore.sendMessage(m.chat, { image: { url: imageUrl }, caption: `Retrieved by Trashcore!\n${imageCaption}`}, { quoted: m });
-    }
-
-    if (quotedMessage.videoMessage) {
-      let videoCaption = quotedMessage.videoMessage.caption;
-      let videoUrl = await trashcore.downloadAndSaveMediaMessage(quotedMessage.videoMessage);
-      trashcore.sendMessage(m.chat, { video: { url: videoUrl }, caption: `Retrieved by Trashcore!\n${videoCaption}`}, { quoted: m });
-    }
-      }
-	break;
+            break  
 //==================================================//  
 case 'goodbye': {
   if (!m.isGroup) return reply(mess.owner)
