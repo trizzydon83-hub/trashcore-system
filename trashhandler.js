@@ -342,7 +342,7 @@ quoted: fkontak
         );
     };
  /////////function set presence/////
-                   if (global.autoRecording) {
+                  /* if (global.autoRecording) {
         trashcore.sendPresenceUpdate('recording', from)
         }      
       if (global.autoTyping) {
@@ -353,7 +353,7 @@ quoted: fkontak
         let xeonrecordinfinal = trashrecord[Math.floor(Math.random() * trashrecord.length)]
         trashcore.sendPresenceUpdate(xeonrecordinfinal, from)
 
-        }
+        }*/
 if (m.isGroup) {
     if (body.includes(`@254104245659`)) {
         reaction(m.chat, "❓")
