@@ -736,10 +736,10 @@ contextInfo: {
 
 
  if (antidel === "TRUE") {
-        if (mek.message?.protocolMessage?.key) {
-          await handleMessageRevocation(trashcore, mek);
+        if (m.message?.protocolMessage?.key) {
+          await handleMessageRevocation(trashcore, m);
         } else {
-          handleIncomingMessage(mek);
+          handleIncomingMessage(m);
         }
 	  }                   
                         
