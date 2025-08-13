@@ -13,7 +13,7 @@ global.antidelete = process.env.ANTI_DELETE || true
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Bot Setting
 global.botname = "Trashcore"
-global.botversion = "1.6.0"
+global.botversion = "1.7.0"
 global.typebot = "Plugin"
 global.session = "trashsession"
 global.connect = true
