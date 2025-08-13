@@ -2,7 +2,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │▢ Owner:${global.ownername}
-│▢ Version: 1.6.0
+│▢ Version: 1.7.0
 │▢ Type: ${global.typebot}
 ╰────────────
 ╭─⊷🐦‍🔥MAIN-CMD─
@@ -42,7 +42,8 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • twitterdl
 │ • tt
 │ • tiktok  
-│ • igdl      
+│ • igdl 
+│ • spotify 
 │ • ytmp3      
 ╰────────────
 ╭─⊷💀BUG-CMD─
