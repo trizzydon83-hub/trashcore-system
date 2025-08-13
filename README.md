@@ -33,7 +33,6 @@ Click [`here`](https://deploy-five-coral.vercel.app/)
 
 
 
-1.[``](https://github.com/Tennor-modz/trashcore-system/fork)
 
 
 
