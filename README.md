@@ -24,33 +24,17 @@
 ---
 
 
-## External plugins 💢
- Click [`Go to external plugin`](https://github.com/Tennor-modz/External-plugins/tree/main)
+
 
 
 
 `Deployment Set Up`
-
-
-1.[`FORK repo`](https://github.com/Tennor-modz/trashcore-system/fork)
-
-
-
-2.[`Scan Session first server`](https://trashcore-pairing-2.onrender.com/pair)
-
-
-         *OR*
-
-[`Scan Session second server`](https://trashcore-pairing-1.onrender.com/pair)
+Click [`here`](https://deploy-five-coral.vercel.app/)
 
 
 
+1.[``](https://github.com/Tennor-modz/trashcore-system/fork)
 
-3.`Deploy`/`Installation`
-* [Heroku](  https://heroku.com/deploy?template=https://github.com/Tennor-modz/trashcore-system)
-
-
-* [Bot hosting panel](https://bot-hosting.net/)
 
 
 ## Heroku Buildpack
