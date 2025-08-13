@@ -47,7 +47,7 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • ytmp3      
 ╰────────────
 ╭─⊷💀BUG-CMD─
-│ • trash                    
+│ • ios-crash                    
 ╰────────────
 ╭─⊷🤖AI-CMD─
 │ • gemma 
