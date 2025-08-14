@@ -13,7 +13,7 @@ global.antidelete = process.env.ANTI_DELETE || true
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Bot Setting
 global.botname = "Trashcore"
-global.botversion = "1.7.0"
+global.botversion = "1.8.0"
 global.typebot = "Plugin"
 global.session = "trashsession"
 global.connect = true
@@ -27,7 +27,7 @@ global.caption = "Trashcore media"
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Sticker Marker
 global.packname = process.env.PACK_NAME ||'𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄'
-global.packname = process.env.AUTHOR||'𝐏𝐀𝐂𝐊𝐒'
+global.packname = process.env.AUTHOR||'🩸⃟‣𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄-𝐏𝐀𝐂𝐊𝐒‣—'
 //━━━━━━━━━━━━━━━━━━━━━━━━//
 // Respon Message
 global.mess = {
