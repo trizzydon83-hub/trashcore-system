@@ -61,7 +61,7 @@ const welcomeMessage = `
 ┏─•⛩️ ${global.botname} ⛩️•─⬣[⿻
 
 👋 Hii, I Am ${global.botname}
- [⿻] 🌌 Version      : ${global.botversion}
+ [⿻] 🌌 Version      : 1.5.0
  [⿻] 👤 Owner  	     : ${global.owner}
  [⿻] 📚 Library      : WBaileys MD
  [⿻] 📱 Status       : Online
@@ -188,7 +188,7 @@ caption: ` [ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉�
 ┏─•⛩️ ${global.botname} ⛩️•─⬣[⿻
 
 👋 Hii, I Am ${global.botname}
- [⿻] 🌌 Version      : ${global.botversion}
+ [⿻] 🌌 Version      : 1.3.0
  [⿻] 👤 Owner  	     : ${global.owner}
  [⿻] 📚 Library      : WBaileys MD
  [⿻] 📱 Status       : Online
@@ -203,7 +203,7 @@ caption: ` [ ༑📚𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚 𝑻𝒓𝒂𝒔𝒉�
 
 			
 
-            console.log('>Trashcore Bot is Connected< [ ! ]')
+            console.log(color('>Trashcore Bot is Connected< [ ! ]','red'))
 		}
 	
 } catch (err) {
