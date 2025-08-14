@@ -33,35 +33,6 @@
 
 
 
-
-## Command For Termux
-```bash
-pkg upgrade && pkg update
-pkg install nodejs
-pkg install libwebp
-pkg install ffmpeg
-pkg install imagemagick
-pkg install yarn
-pkg install git
-git clone https://github.com/Tennor-modz/trashcore-system 
-termux-setup-storage
-cd /sdcard
-cd trashcore-system 
-yarn install
-npm start
-```
-
-- Download [Termux V18] 
-
-## How to Deploy bot 
-
-- *First get your `session ID` from pairing site
-- Set your `session ID` plus other settings in the Heroku config vars if you are using heroku
-- after deploy is done on heroku `activate your dynos` to start bot
-- `Download zip` from the code area and carefully edit your settings in the `trashenv.js` file if you are deploying on the panel
-- `unarchive the zip` then select all files,move with`../`then start your server after one or two minutes your bot will be ready for use*
-
-
 > This base $ bot was created by Trashcore devs
 
 
