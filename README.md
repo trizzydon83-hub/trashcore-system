@@ -39,10 +39,10 @@
 
 
 
-> CURRENT VERSION: 1.7.0
+> CURRENT VERSION: 1.8.0
 >
 > 
 > RELEASE ON: 20th July 2025
 >
 > 
-> LAST UPDATED: 13th August 2025
+> LAST UPDATED: 15th August 2025
