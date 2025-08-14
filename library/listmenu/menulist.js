@@ -2,7 +2,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │▢ Owner:${global.ownername}
-│▢ Version: 1.7.0
+│▢ Version: 1.8.0
 │▢ Type: ${global.typebot}
 ╰────────────
 ╭─⊷🐦‍🔥MAIN-CMD─
@@ -27,6 +27,8 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • autobio
 │ • setprefix 
 │ • autostatusview 
+│ • onlygc
+│ • onlypc
 │ • >
 │ • $
 ╰────────────
@@ -42,12 +44,11 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • twitterdl
 │ • tt
 │ • tiktok  
-│ • igdl 
-│ • spotify 
+│ • igdl      
 │ • ytmp3      
 ╰────────────
 ╭─⊷💀BUG-CMD─
-│ • ios-crash                    
+│ • ios-crash                   
 ╰────────────
 ╭─⊷🤖AI-CMD─
 │ • gemma 
@@ -83,6 +84,10 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • unwarn
 │ • welcome 
 │ • goodbye 
+│ • disp-1
+│ • disp-7 
+│ • disp-90 
+│ • disp-off
 ╰────────────
 ╭─⊷⚓TOOL-CMD─
 │ • enc
@@ -118,7 +123,53 @@ const Menu = `╭─⊷𝐓𝐑𝐀𝐒𝐇𝐂𝐎𝐑𝐄─
 │ • galaxystyle
 │ • royaltext
 │ • freecreate
-╰────────────`
+╰────────────
+╭─⊷🤠FUN-CMD─
+│ • truth
+│ • dare  
+│ • cry
+│ • kill
+│ • happy
+│ • hug
+│ • lick
+│ • pat
+│ • bite
+│ • kiss
+│ • bully
+│ • bonk
+│ • poke
+│ • slap
+│ • wink
+│ • dance
+│ • cuddle
+│ • cringe
+│ • blush
+│ • smile
+│ • shinobu
+│ • handhold
+│ • highfive
+│ • wave
+│ • nom
+│ • feed
+│ • meow
+│ • woof
+│ • lizard
+│ • spank
+│ • tickle
+│ • fox_girl
+│ • avatar
+│ • goose
+│ • 8ball
+│ • gecg
+╰────────────
+╭─⊷🏟️FUTBOL-CMD─
+│ • epl
+│ • laliga
+│ • serie-a
+│ • ligue-1
+│ • bundesliga
+╰────────────
+> By Trashcore devs`
 
 module.exports = Menu
 let file = require.resolve(__filename)
