@@ -26,22 +26,18 @@
 
 
 
-
-
-`Deployment Set Up`
-Click [`here`](https://deploy-five-coral.vercel.app/)
-
-
-
+<a href='https://deploy-five-coral.vercel.app/' target="_blank">
+  <img alt='TRASH DEX' src='https://img.shields.io/badge/Deploy%20HERE%NOW-orange?style=for-the-badge&logo=opencv&logoColor=black'/>
+</a>
+<br> 
 
 
 
-## Heroku Buildpack
-```bash
-heroku/nodejs
-https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest
-https://github.com/clhuang/heroku-buildpack-webp-binaries.git
-```
+
+
+
+
+
 
 ## Command For Termux
 ```bash
