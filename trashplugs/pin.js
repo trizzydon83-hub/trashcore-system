@@ -1,42 +1,67 @@
-const axios = require('axios');
-const fetch = require('node-fetch');
-let trashplug = async (m, { text,trashcore,reply}) => {
-  if (!text) return m.reply('❌ Provide a URL Pinterest!\nUse: .pinterestdl https://pin.it/2NCffxXoN');
+const qs = require('querystring');
+const BASE_URL = 'https://steptodown.com'
 
-  try {
-    await trashcore.sendMessage(m.chat, {
-      react: { text: '⏰', key: m.key }
-    });
-
-    const res = await fetch(`https://api.nekorinn.my.id/downloader/pinterest?url=${encodeURIComponent(text)}`);
-    const data = await res.json();
-
-    if (!data.status || !data.result || !data.result.medias?.length) {
-      return reply('❌ provide a valid media link.');
+async function getToken() {
+  const res = await fetch(`${BASE_URL}/pinterest-video-downloader/`, {
+    headers: {
+      'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137 Safari/537.36'
     }
+  })
+  const html = await res.text()
+  const match = html.match(/name="token" value="([^"]+)"/)
+  if (!match) throw new Error('token tidak ditemukan')
+  return match[1]
+}
 
-    const media = data.result.medias.find(m => m.extension === 'mp4') ||
-                  data.result.medias.find(m => m.extension === 'jpg');
+async function getVideoData(targetUrl, token) {
+  const res = await fetch(`${BASE_URL}/wp-json/aio-dl/video-data/`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137 Safari/537.36',
+      'origin': BASE_URL,
+      'referer': `${BASE_URL}/pinterest-video-downloader/`
+    },
+    body: qs.stringify({
+      url: targetUrl,
+      token
+    })
+  })
+  return res.json()
+}
 
-    if (!media) return reply('❌ provide a valid media.');
+const trashplug = async (m, {trashcore, text,reply,command }) => {
+  if (!text) return reply(`Example : ${command} https://pin.it/xxxxx`)
+  try {
+    m.reply(mess.wait)
+    const token = await getToken()
+    const data = await getVideoData(text, token)
 
-    const caption = `📌 *Pinterest Downloader*\n\n🎞️ *Title:* ${data.result.title}\n💾 *Size:* ${media.formattedSize || '-'}\n📎 *Share:* ${text}`;
-    const type = media.extension === 'mp4' ? 'video' : 'image';
+    if (!data.medias || !data.medias.length) return reply('failed to fetch media')
 
-    await trashcore.sendMessage(m.chat, {
-      [type]: { url: media.url },
-      caption
-    }, { quoted: m });
-
-  } catch (err) {
-    console.error('PinterestDL Error:', err);
-    reply('❌failed to download Pinterest media.');
+    const video = data.medias.find(x => x.extension === 'mp4')
+    if (video) {
+      await trashcore.sendMessage(m.chat, {
+        video: { url: video.url },
+        mimetype: 'video/mp4'
+      }, { quoted: m })
+    } else {
+      const image = data.medias.find(x => x.extension === 'jpg' || x.extension === 'png')
+      if (image) {
+        await trashcore.sendMessage(m.chat, {
+          image: { url: image.url }
+        }, { quoted: m })
+      }
+    }
+  } catch (e) {
+    m.reply(`Eror occured : ${e.message}`)
   }
-};
+}
 
-trashplug.help = ['pin']
-trashplug.tags = ['pin']
-trashplug.command = ['pinterestdl']
-
+trashplug.help = ['pinterestdl <url>']
+trashplug.tags = ['downloader']
+trashplug.command = ['pindl', 'pinterestdl']
 
 module.exports = trashplug;
+
+    
