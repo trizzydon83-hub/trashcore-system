@@ -13,6 +13,7 @@ const path = require('path')
 const axios = require('axios')
 const _ = require('lodash')
 const moment = require('moment-timezone')
+const FileType = require('file-type');
 const PhoneNumber = require('awesome-phonenumber')
 const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./library/lib/exif')
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetch, await, sleep, reSize } = require('./library/lib/function')
@@ -61,7 +62,7 @@ const welcomeMessage = `
 ┏─•⛩️ ${global.botname} ⛩️•─⬣[⿻
 
 👋 Hii, I Am ${global.botname}
- [⿻] 🌌 Version      :  ${global.botversion}
+ [⿻] 🌌 Version      : 1.5.0
  [⿻] 👤 Owner  	     : ${global.owner}
  [⿻] 📚 Library      : WBaileys MD
  [⿻] 📱 Status       : Online
