@@ -310,7 +310,7 @@ const qtext = { key: {fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat
 ////////////////Reply Message////////////////
 const replypic = fs.readFileSync('./library/media/connect.jpg');
 const quotedMessage = m.quoted?.message?.extendedTextMessage?.contextInfo?.quotedMessage || m.quoted?.message?.imageMessage || m.quoted?.message?.videoMessage;
-async function reply(teks) {
+async function trashreply(teks) {
 trashcore.sendMessage(m.chat, {
 text: teks,
 contextInfo: {
@@ -326,7 +326,7 @@ quoted: fkontak
 })
 }
 
-const trashreply = (teks) => {
+const reply = (teks) => {
 trashcore.sendMessage(from, { text : teks }, { quoted : fkontak })
 }
 const trashpic = fs.readFileSync('./library/media/porno.jpg');
@@ -734,10 +734,10 @@ contextInfo: {
 
 
  if (antidel === "TRUE") {
-        if (m.message?.protocolMessage?.key) {
-          await handleMessageRevocation(trashcore, m);
+        if (mek.message?.protocolMessage?.key) {
+          await handleMessageRevocation(trashcore, mek);
         } else {
-          handleIncomingMessage(m);
+          handleIncomingMessage(mek);
         }
 	  }                   
                         
