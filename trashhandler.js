@@ -306,7 +306,7 @@ currencyCode: 'INR'
 status: 1,
   participant: "0@s.whatsapp.net"
 }
-const qtext = { key: {fromMe: false, participant: `254703726139@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast"} : {}) },'message': {extendedTextMessage: {text: "𝙈𝙖𝙙𝙚 𝙗𝙮 𝙩𝙧𝙖𝙨𝙝𝙘𝙤𝙧𝙚 𝙙𝙚𝙫𝙨" }}}
+const qtext = { key: {fromMe: false, participant: `6281519434797@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast"} : {}) },'message': {extendedTextMessage: {text: "𝙈𝙖𝙙𝙚 𝙗𝙮 𝙩𝙧𝙖𝙨𝙝𝙘𝙤𝙧𝙚 𝙙𝙚𝙫𝙨" }}}
 
 ////////////////Reply Message////////////////
 const replypic = fs.readFileSync('./library/media/connect.jpg');
